@@ -4,66 +4,104 @@
 }
 
 .home-page h1 {
-  margin-bottom: 2rem;
+  margin-bottom: 0.5rem;
+  font-size: 2rem;
+  font-weight: 700;
   color: var(--text-primary);
+  letter-spacing: -0.025em;
 }
 
 /* Stats Cards */
 .stats-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1.5rem;
   margin-bottom: 3rem;
 }
 
 .stat-card {
-  background: var(--card-bg);
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  border-left: 4px solid var(--primary-color);
+  background: var(--bg-primary);
+  padding: 2rem;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
 }
 
-.stat-card.active {
-  border-left-color: var(--success-color);
+.stat-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
 }
 
-.stat-card.pot {
-  border-left-color: #10b981;
+.stat-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.stat-icon.people {
+  background: #e0e7ff;
+}
+
+.stat-icon.alive {
+  background: #d1fae5;
+}
+
+.stat-icon.pot {
+  background: #fef3c7;
+}
+
+.stat-content {
+  flex: 1;
 }
 
 .stat-card h3 {
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
   color: var(--text-secondary);
   margin-bottom: 0.5rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
 }
 
 .stat-number {
-  font-size: 2rem;
+  font-size: 2.25rem;
   font-weight: 700;
   color: var(--text-primary);
+  line-height: 1;
+  letter-spacing: -0.025em;
 }
 
 /* Picks Grid Container */
 .picks-grid-container {
-  background: var(--card-bg);
+  background: var(--bg-primary);
   padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
 }
 
 .picks-grid-container h2 {
   margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  font-weight: 700;
   color: var(--text-primary);
+  letter-spacing: -0.025em;
 }
 
-/* Table Wrapper for Horizontal Scroll */
+/* Table Wrapper */
 .table-wrapper {
   overflow-x: auto;
   overflow-y: visible;
   max-width: 100%;
+  border-radius: 8px;
+  border: 1px solid var(--border);
 }
 
 /* Picks Table */
@@ -76,72 +114,112 @@
 
 .picks-table th {
   text-align: left;
-  padding: 0.75rem;
-  border-bottom: 2px solid var(--border-color);
+  padding: 1rem 0.875rem;
+  border-bottom: 2px solid var(--border);
   font-weight: 600;
   color: var(--text-secondary);
   text-transform: uppercase;
-  font-size: 0.75rem;
-  letter-spacing: 0.5px;
-  background: var(--card-bg);
+  font-size: 0.6875rem;
+  letter-spacing: 0.05em;
+  background: var(--neutral-50);
   white-space: nowrap;
 }
 
 .picks-table td {
-  padding: 0.75rem;
-  border-bottom: 1px solid var(--border-color);
+  padding: 0.875rem;
+  border-bottom: 1px solid var(--border);
   text-align: center;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.picks-table tbody tr:last-child td {
+  border-bottom: none;
 }
 
 /* Sticky Columns */
 .sticky-col {
   position: sticky;
-  background: var(--card-bg);
+  background: var(--bg-primary);
   z-index: 10;
+}
+
+.sticky-col th {
+  background: var(--neutral-50);
 }
 
 .player-col {
   left: 0;
-  min-width: 150px;
+  min-width: 160px;
   text-align: left !important;
-  font-weight: 500;
+  font-weight: 600;
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.02);
 }
 
-.strikes-col {
-  left: 150px;
-  min-width: 80px;
+.status-col {
+  left: 160px;
+  min-width: 100px;
   text-align: center !important;
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.02);
 }
 
 /* Week Columns */
 .week-col {
-  min-width: 50px;
+  min-width: 55px;
   text-align: center;
 }
 
 /* Pick Cell Styling */
 .pick-cell {
   font-weight: 600;
-  font-size: 0.8rem;
+  font-size: 0.8125rem;
+  letter-spacing: 0.025em;
+  position: relative;
+}
+
+.pick-cell .pick-team {
+  display: inline-block;
+}
+
+.pick-cell .strike-indicator {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--danger);
+  opacity: 0.85;
+  pointer-events: none;
+  text-shadow: 0 0 3px rgba(255, 255, 255, 0.8);
 }
 
 .pick-cell.win {
-  background-color: #dcfce7;
-  color: #15803d;
+  background: linear-gradient(135deg, #dcfce7 0%, #f0fdf4 100%);
+  color: var(--success-dark);
 }
 
 .pick-cell.loss {
-  background-color: #fee2e2;
-  color: #b91c1c;
+  background: linear-gradient(135deg, #fee2e2 0%, #fef2f2 100%);
+  color: var(--danger-dark);
+}
+
+.pick-cell.strike {
+  position: relative;
 }
 
 /* Eliminated Row Styling */
 .eliminated-row {
-  opacity: 0.5;
+  opacity: 0.45;
 }
 
 .eliminated-row td {
-  color: var(--text-secondary);
+  color: var(--text-muted);
+  background: var(--neutral-50);
+}
+
+.eliminated-row .sticky-col {
+  background: var(--neutral-50);
 }
 
 .eliminated-row .pick-cell {
@@ -149,42 +227,95 @@
 }
 
 /* Hover Effects */
-.picks-table tbody tr:hover {
-  background-color: var(--bg-color);
+.picks-table tbody tr:not(.eliminated-row):hover {
+  background: var(--neutral-50);
 }
 
-.picks-table tbody tr:hover .sticky-col {
-  background-color: var(--bg-color);
+.picks-table tbody tr:not(.eliminated-row):hover .sticky-col {
+  background: var(--neutral-50);
 }
 
-/* Strikes Styling */
-.strikes {
-  font-size: 1.1rem;
+/* Status Badge Styling */
+.status-badge {
   display: inline-block;
+  padding: 0.375rem 1rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-align: center;
 }
 
-.strikes-0 {
-  color: var(--success-color);
+.status-badge.alive {
+  background: #d1fae5;
+  color: #065f46;
 }
 
-.strikes-1 {
-  color: var(--warning-color);
-}
-
-.strikes-2,
-.strikes-3 {
-  color: var(--danger-color);
+.status-badge.out {
+  background: #fee2e2;
+  color: #991b1b;
 }
 
 /* Player Name */
 .player-name {
-  font-weight: 500;
+  font-weight: 600;
+  color: var(--text-primary);
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
   .stats-cards {
     grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .stat-card {
+    padding: 1.25rem;
+  }
+
+  .stat-number {
+    font-size: 2rem;
+  }
+
+  .picks-grid-container {
+    padding: 1.25rem;
+    border-radius: 8px;
+  }
+
+  .picks-grid-container h2 {
+    font-size: 1.25rem;
+  }
+
+  .player-col {
+    min-width: 130px;
+  }
+
+  .status-col {
+    left: 130px;
+    min-width: 80px;
+  }
+
+  .picks-table th,
+  .picks-table td {
+    padding: 0.625rem 0.5rem;
+    font-size: 0.8125rem;
+  }
+
+  .week-col {
+    min-width: 45px;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-page h1 {
+    font-size: 1.5rem;
+  }
+
+  .stat-card h3 {
+    font-size: 0.75rem;
+  }
+
+  .stat-number {
+    font-size: 1.75rem;
   }
 
   .picks-grid-container {
@@ -192,17 +323,11 @@
   }
 
   .player-col {
-    min-width: 120px;
+    min-width: 110px;
   }
 
-  .strikes-col {
-    left: 120px;
-    min-width: 60px;
-  }
-
-  .picks-table th,
-  .picks-table td {
-    padding: 0.5rem;
-    font-size: 0.75rem;
+  .status-col {
+    left: 110px;
+    min-width: 70px;
   }
 }

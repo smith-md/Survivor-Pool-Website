@@ -116,16 +116,25 @@ function Home() {
 
       <div className="stats-cards">
         <div className="stat-card">
-          <h3>Total Players</h3>
-          <p className="stat-number">{stats.totalPlayers}</p>
+          <div className="stat-icon people">👥</div>
+          <div className="stat-content">
+            <h3>Total Participants</h3>
+            <p className="stat-number">{stats.totalPlayers}</p>
+          </div>
         </div>
-        <div className="stat-card active">
-          <h3>Still Alive</h3>
-          <p className="stat-number">{stats.activePlayers}</p>
+        <div className="stat-card">
+          <div className="stat-icon alive">💚</div>
+          <div className="stat-content">
+            <h3>Still Alive</h3>
+            <p className="stat-number">{stats.activePlayers}</p>
+          </div>
         </div>
-        <div className="stat-card pot">
-          <h3>Total Pot</h3>
-          <p className="stat-number">${stats.totalPot}</p>
+        <div className="stat-card">
+          <div className="stat-icon pot">💰</div>
+          <div className="stat-content">
+            <h3>Total Pot</h3>
+            <p className="stat-number">${stats.totalPot}</p>
+          </div>
         </div>
       </div>
 
@@ -136,7 +145,7 @@ function Home() {
             <thead>
               <tr>
                 <th className="sticky-col player-col">Player</th>
-                <th className="sticky-col strikes-col">Strikes</th>
+                <th className="sticky-col status-col">Status</th>
                 {weeks.map(week => (
                   <th key={week.id} className="week-col">
                     W{week.week_number}
@@ -152,16 +161,17 @@ function Home() {
                     <td className="sticky-col player-col player-name">
                       {getPlayerDisplayName(player)}
                     </td>
-                    <td className="sticky-col strikes-col">
-                      <span className={`strikes strikes-${player.strikes}`}>
-                        {player.strikes > 0 ? '❌'.repeat(player.strikes) : '-'}
+                    <td className="sticky-col status-col">
+                      <span className={`status-badge ${isEliminated ? 'out' : 'alive'}`}>
+                        {isEliminated ? 'Out' : 'Alive'}
                       </span>
                     </td>
                     {weeks.map(week => {
                       const pick = picks[player.id]?.[week.week_number]
                       return (
-                        <td key={week.id} className={`pick-cell ${pick?.won === false ? 'loss' : ''} ${pick?.won === true ? 'win' : ''}`}>
-                          {pick?.team || '-'}
+                        <td key={week.id} className={`pick-cell ${pick?.won === false ? 'loss' : ''} ${pick?.won === true ? 'win' : ''} ${pick?.isStrike ? 'strike' : ''}`}>
+                          <span className="pick-team">{pick?.team || '-'}</span>
+                          {pick?.isStrike && <span className="strike-indicator">✕</span>}
                         </td>
                       )
                     })}

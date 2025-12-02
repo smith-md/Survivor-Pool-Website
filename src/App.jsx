@@ -15,7 +15,7 @@ function App() {
         <nav className="navbar">
           <div className="nav-container">
             <Link to="/" className="nav-logo">
-              🏈 NFL Survivor Pool
+              🏆 NFL Survivor Pool 🏆
             </Link>
             <div className="nav-links">
               <Link to="/" className="nav-link">Pool</Link>

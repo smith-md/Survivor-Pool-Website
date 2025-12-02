@@ -31,7 +31,7 @@ function AdminLogin() {
     <div className="admin-login-page">
       <div className="login-container">
         <div className="login-card">
-          <h1>🏈 Admin Login</h1>
+          <h1>Admin Login</h1>
           <p className="login-subtitle">Survivor Pool Administration</p>
 
           <form onSubmit={handleSubmit} className="login-form">
