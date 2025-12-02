@@ -1,8 +1,14 @@
+.home-page {
+  max-width: 100%;
+  width: 100%;
+}
+
 .home-page h1 {
   margin-bottom: 2rem;
   color: var(--text-primary);
 }
 
+/* Stats Cards */
 .stats-cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -22,8 +28,8 @@
   border-left-color: var(--success-color);
 }
 
-.stat-card.eliminated {
-  border-left-color: var(--danger-color);
+.stat-card.pot {
+  border-left-color: #10b981;
 }
 
 .stat-card h3 {
@@ -40,49 +46,121 @@
   color: var(--text-primary);
 }
 
-.standings-table {
+/* Picks Grid Container */
+.picks-grid-container {
   background: var(--card-bg);
   padding: 2rem;
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-.standings-table h2 {
+.picks-grid-container h2 {
   margin-bottom: 1.5rem;
   color: var(--text-primary);
 }
 
-.standings-table table {
-  width: 100%;
-  border-collapse: collapse;
+/* Table Wrapper for Horizontal Scroll */
+.table-wrapper {
+  overflow-x: auto;
+  overflow-y: visible;
+  max-width: 100%;
 }
 
-.standings-table th {
+/* Picks Table */
+.picks-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.875rem;
+}
+
+.picks-table th {
   text-align: left;
-  padding: 1rem;
+  padding: 0.75rem;
   border-bottom: 2px solid var(--border-color);
   font-weight: 600;
   color: var(--text-secondary);
   text-transform: uppercase;
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   letter-spacing: 0.5px;
+  background: var(--card-bg);
+  white-space: nowrap;
 }
 
-.standings-table td {
-  padding: 1rem;
+.picks-table td {
+  padding: 0.75rem;
   border-bottom: 1px solid var(--border-color);
+  text-align: center;
 }
 
-.standings-table tr:hover {
+/* Sticky Columns */
+.sticky-col {
+  position: sticky;
+  background: var(--card-bg);
+  z-index: 10;
+}
+
+.player-col {
+  left: 0;
+  min-width: 150px;
+  text-align: left !important;
+  font-weight: 500;
+}
+
+.strikes-col {
+  left: 150px;
+  min-width: 80px;
+  text-align: center !important;
+}
+
+/* Week Columns */
+.week-col {
+  min-width: 50px;
+  text-align: center;
+}
+
+/* Pick Cell Styling */
+.pick-cell {
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+.pick-cell.win {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
+.pick-cell.loss {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+/* Eliminated Row Styling */
+.eliminated-row {
+  opacity: 0.5;
+}
+
+.eliminated-row td {
+  color: var(--text-secondary);
+}
+
+.eliminated-row .pick-cell {
+  opacity: 0.7;
+}
+
+/* Hover Effects */
+.picks-table tbody tr:hover {
   background-color: var(--bg-color);
 }
 
-.eliminated-row {
-  opacity: 0.6;
+.picks-table tbody tr:hover .sticky-col {
+  background-color: var(--bg-color);
 }
 
+/* Strikes Styling */
 .strikes {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
+  display: inline-block;
 }
 
 .strikes-0 {
@@ -98,19 +176,33 @@
   color: var(--danger-color);
 }
 
-.status {
-  padding: 0.25rem 0.75rem;
-  border-radius: 12px;
-  font-size: 0.875rem;
+/* Player Name */
+.player-name {
   font-weight: 500;
 }
 
-.status.active {
-  background-color: #dcfce7;
-  color: #15803d;
-}
+/* Responsive Design */
+@media (max-width: 768px) {
+  .stats-cards {
+    grid-template-columns: 1fr;
+  }
 
-.status.eliminated {
-  background-color: #fee2e2;
-  color: #b91c1c;
+  .picks-grid-container {
+    padding: 1rem;
+  }
+
+  .player-col {
+    min-width: 120px;
+  }
+
+  .strikes-col {
+    left: 120px;
+    min-width: 60px;
+  }
+
+  .picks-table th,
+  .picks-table td {
+    padding: 0.5rem;
+    font-size: 0.75rem;
+  }
 }
