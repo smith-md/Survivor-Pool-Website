@@ -12,9 +12,9 @@ function AdminLogin() {
     e.preventDefault()
     setError('')
 
-    // Check credentials against environment variables
-    const correctUsername = import.meta.env.VITE_ADMIN_USERNAME || 'admin'
-    const correctPassword = import.meta.env.VITE_ADMIN_PASSWORD || 'password'
+    // Check credentials
+    const correctUsername = 'admin'
+    const correctPassword = 'mikeisgreatest'
 
     if (username === correctUsername && password === correctPassword) {
       // Store auth token in sessionStorage (cleared when browser closes)
