@@ -140,12 +140,71 @@
   margin-bottom: 3rem;
 }
 
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+  gap: 1rem;
+}
+
 .current-players-section h2 {
   color: var(--text-primary);
   font-size: 1.5rem;
   font-weight: 700;
-  margin-bottom: 1.25rem;
+  margin: 0;
   letter-spacing: -0.025em;
+}
+
+.edit-controls {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.edit-mode-button,
+.save-all-button,
+.cancel-edit-button {
+  padding: 0.625rem 1.25rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.edit-mode-button {
+  background: var(--primary);
+  color: white;
+  box-shadow: var(--shadow-sm);
+}
+
+.edit-mode-button:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.save-all-button {
+  background: #10b981;
+  color: white;
+  box-shadow: var(--shadow-sm);
+}
+
+.save-all-button:hover {
+  background: #059669;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.cancel-edit-button {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+}
+
+.cancel-edit-button:hover {
+  background: var(--bg-primary);
 }
 
 .table-container {
@@ -218,6 +277,11 @@
   color: #991b1b;
 }
 
+.status-badge.buyback-pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
 .payment-toggle {
   padding: 0.5rem 1rem;
   border-radius: 6px;
@@ -262,6 +326,100 @@
   background: var(--bg-primary);
   border-color: var(--primary);
   color: var(--primary);
+}
+
+/* Buyback Decision Buttons */
+.buyback-decision {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.buyback-button {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+}
+
+.buyback-button:hover {
+  background: var(--bg-primary);
+  border-color: var(--primary);
+}
+
+.buyback-button.selected {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.buyback-text {
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+}
+
+/* Inline Editing */
+.name-edit-group {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.name-input {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  min-width: 80px;
+  flex: 1;
+}
+
+.name-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.checkbox-inline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.checkbox-inline input[type="checkbox"] {
+  width: 1.25rem;
+  height: 1.25rem;
+  cursor: pointer;
+}
+
+.delete-button-inline {
+  padding: 0.5rem 1rem;
+  background: var(--danger);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.delete-button-inline:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.delete-button-inline:active {
+  transform: translateY(0);
 }
 
 /* Previous Players Section */
@@ -422,6 +580,38 @@
 }
 
 .checkbox-group input[type="checkbox"] {
+  width: 1.125rem;
+  height: 1.125rem;
+  cursor: pointer;
+}
+
+/* Radio Group for Buyback Decision */
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  cursor: pointer;
+  font-weight: 500;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.radio-label:hover {
+  background: var(--bg-primary);
+}
+
+.radio-label input[type="radio"] {
   width: 1.125rem;
   height: 1.125rem;
   cursor: pointer;

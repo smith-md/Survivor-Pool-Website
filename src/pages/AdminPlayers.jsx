@@ -10,7 +10,10 @@ function AdminPlayers() {
   const [showAddModal, setShowAddModal] = useState(false)
   const [editingPlayer, setEditingPlayer] = useState(null)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [playerToDelete, setPlayerToDelete] = useState(null)
   const [notification, setNotification] = useState(null)
+  const [isEditMode, setIsEditMode] = useState(false)
+  const [editedPlayers, setEditedPlayers] = useState({})
   const [newPlayer, setNewPlayer] = useState({
     first_name: '',
     last_name: '',
@@ -115,14 +118,107 @@ function AdminPlayers() {
     }
   }
 
-  function handleEditClick(player) {
-    setEditingPlayer({
-      id: player.id,
-      first_name: player.first_name,
-      last_name: player.last_name,
-      entry_fee_paid: player.entry_fee_paid,
-      has_bought_back: player.has_bought_back
+  function getPlayerStatus(player) {
+    if (player.is_eliminated) return { text: 'Eliminated', className: 'eliminated' }
+    if (player.strikes === 2 && !player.has_bought_back) {
+      return { text: 'Buyback Pending', className: 'buyback-pending' }
+    }
+    return { text: 'Active', className: 'active' }
+  }
+
+  function handleEnterEditMode() {
+    setIsEditMode(true)
+    // Initialize edited players with current values
+    const initialEdits = {}
+    currentPlayers.forEach(player => {
+      initialEdits[player.id] = {
+        first_name: player.first_name || '',
+        last_name: player.last_name || '',
+        entry_fee_paid: player.entry_fee_paid || false,
+        has_bought_back: player.has_bought_back || false // Default to false (No)
+      }
     })
+    setEditedPlayers(initialEdits)
+  }
+
+  function handleCancelEdit() {
+    setIsEditMode(false)
+    setEditedPlayers({})
+  }
+
+  function handleFieldChange(playerId, field, value) {
+    setEditedPlayers(prev => ({
+      ...prev,
+      [playerId]: {
+        ...prev[playerId],
+        [field]: value
+      }
+    }))
+  }
+
+  async function handleSaveAll() {
+    try {
+      // Update each player that was edited
+      for (const [playerId, edits] of Object.entries(editedPlayers)) {
+        const player = currentPlayers.find(p => p.id === playerId)
+
+        // Skip if player not found
+        if (!player) {
+          console.warn(`Player with id ${playerId} not found`)
+          continue
+        }
+
+        // Validate and sanitize names
+        const firstName = (edits.first_name || '').trim()
+        const lastName = (edits.last_name || '').trim()
+
+        if (!firstName || !lastName) {
+          showNotification(`Please enter both first and last name for ${player.first_name || 'player'}`, 'error')
+          return
+        }
+
+        // Build update data
+        let updateData = {
+          first_name: firstName,
+          last_name: lastName,
+          name: `${firstName} ${lastName}`,
+          entry_fee_paid: edits.entry_fee_paid || false,
+          has_bought_back: edits.has_bought_back || false
+        }
+
+        // Handle buyback elimination logic for players with 2 strikes
+        if (player.strikes === 2) {
+          if (edits.has_bought_back === false) {
+            updateData.is_eliminated = true
+            updateData.is_active = false
+          } else {
+            updateData.is_eliminated = false
+            updateData.is_active = true
+          }
+        }
+
+        const { error } = await supabaseAdmin
+          .from('players')
+          .update(updateData)
+          .eq('id', playerId)
+
+        if (error) throw error
+      }
+
+      // Exit edit mode and refresh
+      setIsEditMode(false)
+      setEditedPlayers({})
+      await fetchPlayers()
+      showNotification('All players updated successfully!')
+    } catch (error) {
+      console.error('Error saving players:', error)
+      showNotification('Error saving players: ' + error.message, 'error')
+    }
+  }
+
+  function handleDeleteClick(player) {
+    setPlayerToDelete(player)
+    setShowDeleteConfirm(true)
   }
 
   async function handleUpdatePlayer(e) {
@@ -140,8 +236,7 @@ function AdminPlayers() {
           first_name: editingPlayer.first_name.trim(),
           last_name: editingPlayer.last_name.trim(),
           name: `${editingPlayer.first_name.trim()} ${editingPlayer.last_name.trim()}`,
-          entry_fee_paid: editingPlayer.entry_fee_paid,
-          has_bought_back: editingPlayer.has_bought_back
+          entry_fee_paid: editingPlayer.entry_fee_paid
         })
         .eq('id', editingPlayer.id)
 
@@ -167,13 +262,13 @@ function AdminPlayers() {
       const { error } = await supabaseAdmin
         .from('players')
         .delete()
-        .eq('id', editingPlayer.id)
+        .eq('id', playerToDelete.id)
 
       if (error) throw error
 
       // Close modals and refresh
       setShowDeleteConfirm(false)
-      setEditingPlayer(null)
+      setPlayerToDelete(null)
       await fetchPlayers()
 
       showNotification('Player deleted successfully!')
@@ -234,6 +329,44 @@ function AdminPlayers() {
     }
   }
 
+  async function handleBuybackDecision(player, decision) {
+    try {
+      // Determine elimination status based on decision
+      let updateData = {
+        has_bought_back: decision
+      }
+
+      // If declined (false), eliminate the player
+      if (decision === false) {
+        updateData.is_eliminated = true
+        updateData.is_active = false
+      } else {
+        // If bought back (true), keep them active
+        updateData.is_eliminated = false
+        updateData.is_active = true
+      }
+
+      const { error } = await supabaseAdmin
+        .from('players')
+        .update(updateData)
+        .eq('id', player.id)
+
+      if (error) throw error
+
+      // Refresh player list
+      await fetchPlayers()
+
+      showNotification(
+        decision
+          ? `${player.first_name} ${player.last_name} bought back in!`
+          : `${player.first_name} ${player.last_name} declined buyback - eliminated`
+      )
+    } catch (error) {
+      console.error('Error updating buyback status:', error)
+      showNotification('Error updating buyback status: ' + error.message, 'error')
+    }
+  }
+
   if (loading) {
     return (
       <div className="admin-players">
@@ -267,7 +400,25 @@ function AdminPlayers() {
       </div>
 
       <div className="current-players-section">
-        <h2>Current Players ({currentPlayers.length})</h2>
+        <div className="section-header">
+          <h2>Current Players ({currentPlayers.length})</h2>
+          <div className="edit-controls">
+            {!isEditMode ? (
+              <button onClick={handleEnterEditMode} className="edit-mode-button">
+                Edit Table
+              </button>
+            ) : (
+              <>
+                <button onClick={handleCancelEdit} className="cancel-edit-button">
+                  Cancel
+                </button>
+                <button onClick={handleSaveAll} className="save-all-button">
+                  Save All Changes
+                </button>
+              </>
+            )}
+          </div>
+        </div>
         <div className="table-container">
           <table className="players-table">
             <thead>
@@ -281,31 +432,91 @@ function AdminPlayers() {
               </tr>
             </thead>
             <tbody>
-              {currentPlayers.map(player => (
-                <tr key={player.id}>
-                  <td className="player-name">
-                    {player.first_name} {player.last_name}
-                  </td>
-                  <td>
-                    <span className={`status-badge ${player.is_eliminated ? 'eliminated' : 'active'}`}>
-                      {player.is_eliminated ? 'Eliminated' : 'Active'}
-                    </span>
-                  </td>
-                  <td>{player.strikes || 0}</td>
-                  <td>
-                    <button
-                      className={`payment-toggle ${player.entry_fee_paid ? 'paid' : 'unpaid'}`}
-                      onClick={() => togglePaymentStatus(player.id, player.entry_fee_paid)}
-                    >
-                      {player.entry_fee_paid ? '✓ Paid' : '✗ Unpaid'}
-                    </button>
-                  </td>
-                  <td>{player.has_bought_back ? 'Yes' : 'No'}</td>
-                  <td>
-                    <button className="action-button" onClick={() => handleEditClick(player)}>Edit</button>
-                  </td>
-                </tr>
-              ))}
+              {currentPlayers.map(player => {
+                const status = getPlayerStatus(player)
+                const edits = editedPlayers[player.id] || player
+
+                return (
+                  <tr key={player.id}>
+                    <td className="player-name">
+                      {isEditMode ? (
+                        <div className="name-edit-group">
+                          <input
+                            type="text"
+                            value={edits.first_name}
+                            onChange={(e) => handleFieldChange(player.id, 'first_name', e.target.value)}
+                            className="name-input"
+                            placeholder="First"
+                          />
+                          <input
+                            type="text"
+                            value={edits.last_name}
+                            onChange={(e) => handleFieldChange(player.id, 'last_name', e.target.value)}
+                            className="name-input"
+                            placeholder="Last"
+                          />
+                        </div>
+                      ) : (
+                        `${player.first_name} ${player.last_name}`
+                      )}
+                    </td>
+                    <td>
+                      <span className={`status-badge ${status.className}`}>
+                        {status.text}
+                      </span>
+                    </td>
+                    <td>{player.strikes || 0}</td>
+                    <td>
+                      {isEditMode ? (
+                        <label className="checkbox-inline">
+                          <input
+                            type="checkbox"
+                            checked={edits.entry_fee_paid}
+                            onChange={(e) => handleFieldChange(player.id, 'entry_fee_paid', e.target.checked)}
+                          />
+                        </label>
+                      ) : (
+                        <button
+                          className={`payment-toggle ${player.entry_fee_paid ? 'paid' : 'unpaid'}`}
+                          onClick={() => togglePaymentStatus(player.id, player.entry_fee_paid)}
+                        >
+                          {player.entry_fee_paid ? '✓ Paid' : '✗ Unpaid'}
+                        </button>
+                      )}
+                    </td>
+                    <td>
+                      {isEditMode && player.strikes === 2 ? (
+                        <div className="buyback-decision">
+                          <button
+                            className={`buyback-button ${edits.has_bought_back === true ? 'selected' : ''}`}
+                            onClick={() => handleFieldChange(player.id, 'has_bought_back', true)}
+                          >
+                            Yes
+                          </button>
+                          <button
+                            className={`buyback-button ${edits.has_bought_back === false ? 'selected' : ''}`}
+                            onClick={() => handleFieldChange(player.id, 'has_bought_back', false)}
+                          >
+                            No
+                          </button>
+                        </div>
+                      ) : (
+                        <span className="buyback-text">{player.has_bought_back ? 'Yes' : 'No'}</span>
+                      )}
+                    </td>
+                    <td>
+                      {isEditMode && (
+                        <button
+                          className="delete-button-inline"
+                          onClick={() => handleDeleteClick(player)}
+                        >
+                          Delete
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                )
+              })}
             </tbody>
           </table>
         </div>
@@ -417,16 +628,6 @@ function AdminPlayers() {
                   Entry Fee Paid
                 </label>
               </div>
-              <div className="form-group checkbox-group">
-                <label>
-                  <input
-                    type="checkbox"
-                    checked={editingPlayer.has_bought_back}
-                    onChange={(e) => setEditingPlayer({ ...editingPlayer, has_bought_back: e.target.checked })}
-                  />
-                  Has Bought Back
-                </label>
-              </div>
               <div className="modal-actions">
                 <button type="button" onClick={handleDeleteClick} className="delete-button">
                   Delete Player
@@ -445,13 +646,13 @@ function AdminPlayers() {
         </div>
       )}
 
-      {showDeleteConfirm && editingPlayer && (
+      {showDeleteConfirm && playerToDelete && (
         <div className="modal-overlay" onClick={() => setShowDeleteConfirm(false)}>
           <div className="confirm-modal" onClick={(e) => e.stopPropagation()}>
             <div className="confirm-icon">⚠️</div>
             <h2>Delete Player?</h2>
             <p className="confirm-message">
-              Are you sure you want to delete <strong>{editingPlayer.first_name} {editingPlayer.last_name}</strong>?
+              Are you sure you want to delete <strong>{playerToDelete.first_name} {playerToDelete.last_name}</strong>?
             </p>
             <p className="confirm-warning">
               This action cannot be undone.
