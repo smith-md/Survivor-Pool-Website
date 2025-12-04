@@ -181,17 +181,18 @@
   display: inline-block;
 }
 
-.pick-cell .strike-indicator {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: var(--danger);
-  opacity: 0.85;
-  pointer-events: none;
-  text-shadow: 0 0 3px rgba(255, 255, 255, 0.8);
+.pick-cell .team-logo {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  display: inline-block;
+  vertical-align: middle;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+  transition: transform 0.2s ease;
+}
+
+.pick-cell:hover .team-logo {
+  transform: scale(1.1);
 }
 
 .pick-cell.win {
@@ -200,8 +201,8 @@
 }
 
 .pick-cell.loss {
-  background: linear-gradient(135deg, #fee2e2 0%, #fef2f2 100%);
-  color: var(--danger-dark);
+  background: linear-gradient(135deg, #fef2f2 0%, #fffbfb 100%);
+  color: var(--text-primary);
 }
 
 .pick-cell.strike {
@@ -303,6 +304,11 @@
   .week-col {
     min-width: 45px;
   }
+
+  .pick-cell .team-logo {
+    width: 28px;
+    height: 28px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -329,5 +335,10 @@
   .status-col {
     left: 110px;
     min-width: 70px;
+  }
+
+  .pick-cell .team-logo {
+    width: 24px;
+    height: 24px;
   }
 }

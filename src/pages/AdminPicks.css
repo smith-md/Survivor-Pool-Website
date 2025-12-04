@@ -1,0 +1,495 @@
+.admin-picks {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 2rem;
+  position: relative;
+}
+
+/* Notification Toast (same as AdminPlayers) */
+.admin-picks .notification {
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  min-width: 300px;
+  max-width: 500px;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  z-index: 2000;
+  animation: slideIn 0.3s ease-out;
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.admin-picks .notification.success {
+  background: #d1fae5;
+  color: #065f46;
+  border: 1px solid #10b981;
+}
+
+.admin-picks .notification.error {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #ef4444;
+}
+
+.admin-picks .notification-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.admin-picks .notification.success .notification-close:hover {
+  background: rgba(6, 95, 70, 0.1);
+}
+
+.admin-picks .notification.error .notification-close:hover {
+  background: rgba(153, 27, 27, 0.1);
+}
+
+/* Header */
+.admin-picks .admin-header {
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+.admin-picks h1 {
+  margin: 0.5rem 0 0 0;
+  color: var(--text-primary);
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.admin-picks .subtitle {
+  color: var(--text-secondary);
+  margin: 0.25rem 0 0 0;
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+.admin-picks .back-link {
+  display: inline-block;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  transition: color 0.2s ease;
+}
+
+.admin-picks .back-link:hover {
+  color: var(--primary);
+}
+
+/* Header Actions */
+.header-actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+/* View Toggle and Edit Previous Buttons */
+.view-toggle-btn,
+.edit-previous-btn {
+  padding: 0.75rem 1.5rem;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  box-shadow: var(--shadow-sm);
+}
+
+.view-toggle-btn:hover,
+.edit-previous-btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.view-toggle-btn.active,
+.edit-previous-btn.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+.view-toggle-btn.active:hover,
+.edit-previous-btn.active:hover {
+  background: var(--primary-dark);
+  border-color: var(--primary-dark);
+}
+
+/* Missing Picks Alert */
+.missing-picks-alert {
+  background: #fef3c7;
+  border: 2px solid #f59e0b;
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.missing-picks-alert .alert-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  color: #92400e;
+}
+
+.missing-picks-alert .alert-icon {
+  font-size: 1.5rem;
+}
+
+.missing-picks-alert .alert-header strong {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.missing-players-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-left: 2.25rem;
+}
+
+.missing-player-name {
+  background: white;
+  padding: 0.375rem 0.875rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #92400e;
+  border: 1px solid #fbbf24;
+}
+
+/* Missing Pick Icon */
+.missing-pick-icon {
+  display: inline-block;
+  margin-right: 0.5rem;
+  font-size: 1rem;
+}
+
+/* Picks Table */
+.picks-container {
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: calc(100vh - 250px);
+}
+
+.picks-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.875rem;
+}
+
+.picks-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--bg-secondary);
+}
+
+.picks-table th {
+  padding: 0.875rem 0.75rem;
+  text-align: left;
+  font-weight: 700;
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid var(--border);
+  white-space: nowrap;
+}
+
+.picks-table .sticky-col {
+  position: sticky;
+  left: 0;
+  z-index: 5;
+  background: var(--bg-primary);
+}
+
+.picks-table thead .sticky-col {
+  z-index: 15;
+  background: var(--bg-secondary);
+}
+
+.picks-table .player-col {
+  min-width: 150px;
+  left: 0;
+}
+
+.picks-table .status-col {
+  min-width: 80px;
+  left: 150px;
+}
+
+.picks-table tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background-color 0.15s ease;
+}
+
+.picks-table tbody tr:hover {
+  background: var(--bg-secondary);
+}
+
+.picks-table tbody tr.eliminated-row {
+  opacity: 0.6;
+}
+
+.picks-table td {
+  padding: 0.75rem;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border);
+}
+
+.picks-table .player-name {
+  font-weight: 600;
+}
+
+.picks-table .week-col {
+  min-width: 100px;
+  text-align: center;
+}
+
+/* Current Week Highlighting */
+.picks-table th.current-week {
+  background: #dbeafe;
+  color: #1e40af;
+  position: relative;
+}
+
+.picks-table th.current-week .current-badge {
+  display: block;
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 0.125rem;
+  color: #1e40af;
+}
+
+.picks-table td.current-week {
+  background: #eff6ff;
+  border-left: 2px solid #3b82f6;
+  border-right: 2px solid #3b82f6;
+}
+
+.picks-table tbody tr:hover td.current-week {
+  background: #dbeafe;
+}
+
+.picks-table .pick-cell {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.375rem 0.875rem;
+  border-radius: 20px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+}
+
+.status-badge.alive {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.status-badge.out {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* Team Select Dropdown */
+.team-select {
+  width: 80px;
+  padding: 0.5rem 0.375rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.team-select:hover:not(:disabled) {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.team-select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.team-select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--bg-secondary);
+}
+
+.team-select option {
+  padding: 0.5rem;
+  font-weight: 600;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 3rem 2rem;
+}
+
+.empty-state p {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.add-players-link {
+  display: inline-block;
+  padding: 0.875rem 1.75rem;
+  background: var(--primary);
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.add-players-link:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .picks-table th,
+  .picks-table td {
+    padding: 0.625rem 0.5rem;
+    font-size: 0.8125rem;
+  }
+
+  .team-select {
+    width: 70px;
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-picks {
+    padding: 1.5rem 1rem;
+  }
+
+  .admin-picks .admin-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-picks h1 {
+    font-size: 1.75rem;
+  }
+
+  .header-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .view-toggle-btn,
+  .edit-previous-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .missing-picks-alert {
+    padding: 1rem;
+  }
+
+  .missing-players-list {
+    margin-left: 0;
+    margin-top: 0.5rem;
+  }
+
+  .picks-table .player-col {
+    min-width: 120px;
+  }
+
+  .picks-table .status-col {
+    min-width: 70px;
+    left: 120px;
+  }
+
+  .picks-table .week-col {
+    min-width: 80px;
+  }
+
+  .team-select {
+    width: 60px;
+    font-size: 0.7rem;
+    padding: 0.375rem 0.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-picks h1 {
+    font-size: 1.5rem;
+  }
+
+  .picks-table th,
+  .picks-table td {
+    padding: 0.5rem 0.375rem;
+  }
+}

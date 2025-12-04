@@ -106,6 +106,12 @@ function Home() {
     return player.name || 'Unknown'
   }
 
+  function getTeamLogoUrl(teamAbbreviation) {
+    if (!teamAbbreviation) return null
+    // ESPN's public CDN for NFL team logos
+    return `https://a.espncdn.com/i/teamlogos/nfl/500/${teamAbbreviation}.png`
+  }
+
   if (loading) {
     return <div className="loading">Loading survivor pool data...</div>
   }
@@ -168,10 +174,25 @@ function Home() {
                     </td>
                     {weeks.map(week => {
                       const pick = picks[player.id]?.[week.week_number]
+                      const logoUrl = pick?.team ? getTeamLogoUrl(pick.team) : null
                       return (
-                        <td key={week.id} className={`pick-cell ${pick?.won === false ? 'loss' : ''} ${pick?.won === true ? 'win' : ''} ${pick?.isStrike ? 'strike' : ''}`}>
-                          <span className="pick-team">{pick?.team || '-'}</span>
-                          {pick?.isStrike && <span className="strike-indicator">✕</span>}
+                        <td key={week.id} className={`pick-cell ${pick?.won === false ? 'loss' : ''} ${pick?.won === true ? 'win' : ''}`}>
+                          {logoUrl ? (
+                            <img
+                              src={logoUrl}
+                              alt={pick.team}
+                              title={pick.team}
+                              className="team-logo"
+                              onError={(e) => {
+                                // Fallback to text if logo fails to load
+                                e.target.style.display = 'none'
+                                e.target.nextSibling.style.display = 'inline'
+                              }}
+                            />
+                          ) : null}
+                          <span className="pick-team" style={{ display: logoUrl ? 'none' : 'inline' }}>
+                            {pick?.team || '-'}
+                          </span>
                         </td>
                       )
                     })}

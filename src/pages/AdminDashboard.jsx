@@ -34,12 +34,6 @@ function AdminDashboard() {
           <h3>Enter Picks</h3>
           <p>Submit weekly picks for all players.</p>
         </Link>
-
-        <Link to="/admin/results" className="admin-card">
-          <div className="admin-card-icon">🏆</div>
-          <h3>Mark Results</h3>
-          <p>Update game results and calculate standings.</p>
-        </Link>
       </div>
 
       <div className="admin-note">
