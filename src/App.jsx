@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import './App.css'
 import Home from './pages/Home'
+import Archive from './pages/Archive'
 import AdminLogin from './pages/AdminLogin'
 import AdminDashboard from './pages/AdminDashboard'
 import AdminPlayers from './pages/AdminPlayers'
@@ -19,6 +20,7 @@ function App() {
             </Link>
             <div className="nav-links">
               <Link to="/" className="nav-link">Pool</Link>
+              <Link to="/archive" className="nav-link">Archive</Link>
               <Link to="/admin" className="nav-link admin-link">Admin</Link>
             </div>
           </div>
@@ -27,6 +29,7 @@ function App() {
         <main className="main-content">
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/archive" element={<Archive />} />
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
             <Route path="/admin/players" element={<ProtectedRoute><AdminPlayers /></ProtectedRoute>} />

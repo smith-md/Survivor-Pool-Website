@@ -7,6 +7,7 @@ function Home() {
   const [weeks, setWeeks] = useState([])
   const [picks, setPicks] = useState({})
   const [loading, setLoading] = useState(true)
+  const [currentSeason, setCurrentSeason] = useState(null)
   const [stats, setStats] = useState({
     totalPlayers: 0,
     activePlayers: 0,
@@ -19,19 +20,31 @@ function Home() {
 
   async function fetchData() {
     try {
-      // Fetch all players
+      // Get current season (max season_year)
+      const { data: seasonsData, error: seasonsError } = await supabase
+        .from('weeks')
+        .select('season_year')
+        .order('season_year', { ascending: false })
+        .limit(1)
+
+      if (seasonsError) throw seasonsError
+
+      const season = seasonsData?.[0]?.season_year || new Date().getFullYear()
+      setCurrentSeason(season)
+
+      // Fetch all players for current season
       const { data: playersData, error: playersError } = await supabase
         .from('players')
         .select('*')
-        .eq('season_year', 2025)
+        .eq('season_year', season)
 
       if (playersError) throw playersError
 
-      // Fetch all weeks
+      // Fetch all weeks for current season
       const { data: weeksData, error: weeksError } = await supabase
         .from('weeks')
         .select('*')
-        .eq('season_year', 2025)
+        .eq('season_year', season)
         .order('week_number', { ascending: true })
 
       if (weeksError) throw weeksError
@@ -118,7 +131,7 @@ function Home() {
 
   return (
     <div className="home-page">
-      <h1>Survivor Pool 2025</h1>
+      <h1>Survivor Pool {currentSeason}</h1>
 
       <div className="stats-cards">
         <div className="stat-card">
