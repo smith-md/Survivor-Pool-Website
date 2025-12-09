@@ -6,80 +6,72 @@
 
 /* Navbar */
 .navbar {
-  background-color: var(--bg-primary);
-  border-bottom: 1px solid var(--border);
-  box-shadow: var(--shadow-sm);
+  background-color: var(--brand-header);
+  height: 64px;
   position: sticky;
   top: 0;
   z-index: 100;
+  box-shadow: var(--shadow-sm);
 }
 
 .nav-container {
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 1rem 2rem;
+  padding: 0 2rem;
+  height: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 .nav-logo {
-  font-size: 1.25rem;
+  font-size: 1.125rem;
   font-weight: 700;
-  color: var(--text-primary);
+  color: #FFFFFF;
   text-decoration: none;
-  letter-spacing: -0.025em;
-  transition: color 0.15s ease;
+  letter-spacing: 0.025em;
+  transition: opacity 0.15s ease;
 }
 
 .nav-logo:hover {
-  color: var(--primary);
+  opacity: 0.9;
 }
 
 .nav-links {
   display: flex;
-  gap: 2.5rem;
+  gap: 2rem;
   align-items: center;
 }
 
 .nav-link {
-  color: var(--text-secondary);
+  color: #FFFFFF;
   text-decoration: none;
   font-weight: 500;
   font-size: 0.9375rem;
-  transition: color 0.15s ease;
+  transition: all 0.15s ease;
   position: relative;
+  padding-bottom: 2px;
 }
 
 .nav-link:hover {
-  color: var(--text-primary);
-}
-
-.nav-link::after {
-  content: '';
-  position: absolute;
-  bottom: -0.5rem;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--primary);
-  transform: scaleX(0);
-  transition: transform 0.2s ease;
-}
-
-.nav-link:hover::after {
-  transform: scaleX(1);
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 
 .nav-link.admin-link {
-  color: var(--primary);
+  color: #FFFFFF;
   font-weight: 600;
+  opacity: 0.95;
+}
+
+.nav-link.admin-link:hover {
+  opacity: 1;
 }
 
 /* Main Content */
 .main-content {
   flex: 1;
-  max-width: 1400px;
+  max-width: 1200px;
   width: 100%;
   margin: 0 auto;
   padding: 2.5rem 2rem;

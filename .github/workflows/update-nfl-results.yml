@@ -1,0 +1,44 @@
+name: Update NFL Game Results
+
+on:
+  schedule:
+    # Thursday Night Football: 8 PM - 1 AM ET (1-6 AM UTC Friday)
+    - cron: '0 1-6 * 9-12,1 5'
+
+    # Sunday Early Games: 1 PM - 5 PM ET (6-10 PM UTC Sunday)
+    - cron: '0 18-22 * 9-12,1 0'
+
+    # Sunday Late Games & Night: 5 PM - 1 AM ET (10 PM UTC Sun - 6 AM UTC Mon)
+    - cron: '0 22-23 * 9-12,1 0'
+    - cron: '0 0-6 * 9-12,1 1'
+
+    # Monday Night Football: 8 PM - 1 AM ET (1-6 AM UTC Tuesday)
+    - cron: '0 1-6 * 9-12,1 2'
+
+  # Allow manual trigger from GitHub Actions tab
+  workflow_dispatch:
+    inputs:
+      week:
+        description: 'Week number (optional - auto-detects if not provided)'
+        required: false
+        type: string
+
+jobs:
+  update-results:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Update NFL Game Results
+        run: |
+          WEEK_PARAM=""
+          if [ -n "${{ github.event.inputs.week }}" ]; then
+            WEEK_PARAM="?week=${{ github.event.inputs.week }}"
+          fi
+
+          curl -X POST \
+            "${{ secrets.SUPABASE_URL }}/functions/v1/update-nfl-results${WEEK_PARAM}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+            -H "Content-Type: application/json"
+
+      - name: Log completion
+        run: echo "NFL results update completed"
