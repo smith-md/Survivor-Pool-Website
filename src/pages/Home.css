@@ -4,10 +4,10 @@
 }
 
 .home-page h1 {
-  margin-bottom: 0.5rem;
+  margin-bottom: 2rem;
   font-size: 2rem;
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--text-main);
   letter-spacing: -0.025em;
 }
 
@@ -16,83 +16,55 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1.5rem;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
 }
 
 .stat-card {
-  background: var(--bg-primary);
-  padding: 2rem;
-  border-radius: 16px;
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-sm);
-  transition: all 0.2s ease;
+  background: var(--bg-surface);
+  padding: 1.5rem;
+  border-radius: 10px;
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-md);
+  transition: box-shadow 0.2s ease;
   display: flex;
-  align-items: center;
-  gap: 1.5rem;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
 .stat-card:hover {
-  box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
-}
-
-.stat-icon {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 2rem;
-  flex-shrink: 0;
-}
-
-.stat-icon.people {
-  background: #e0e7ff;
-}
-
-.stat-icon.alive {
-  background: #d1fae5;
-}
-
-.stat-icon.pot {
-  background: #fef3c7;
-}
-
-.stat-content {
-  flex: 1;
+  box-shadow: var(--shadow-lg);
 }
 
 .stat-card h3 {
-  font-size: 0.9375rem;
+  font-size: 0.75rem;
   font-weight: 600;
-  color: var(--text-secondary);
-  margin-bottom: 0.5rem;
+  color: var(--text-muted);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .stat-number {
-  font-size: 2.25rem;
+  font-size: 2rem;
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--text-main);
   line-height: 1;
-  letter-spacing: -0.025em;
 }
 
 /* Picks Grid Container */
 .picks-grid-container {
-  background: var(--bg-primary);
-  padding: 2rem;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow);
+  background: var(--bg-surface);
+  padding: 1.5rem;
+  border-radius: 10px;
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-md);
 }
 
 .picks-grid-container h2 {
   margin-bottom: 1.5rem;
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  letter-spacing: -0.025em;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-main);
 }
 
 /* Table Wrapper */
@@ -100,8 +72,8 @@
   overflow-x: auto;
   overflow-y: visible;
   max-width: 100%;
-  border-radius: 8px;
-  border: 1px solid var(--border);
+  border-radius: 10px;
+  border: 1px solid var(--border-soft);
 }
 
 /* Picks Table */
@@ -114,38 +86,42 @@
 
 .picks-table th {
   text-align: left;
-  padding: 1rem 0.875rem;
-  border-bottom: 2px solid var(--border);
+  padding: 0.875rem;
+  border-bottom: 1px solid var(--border-soft);
   font-weight: 600;
-  color: var(--text-secondary);
+  color: var(--text-muted);
   text-transform: uppercase;
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   letter-spacing: 0.05em;
-  background: var(--neutral-50);
+  background: var(--table-header-bg);
   white-space: nowrap;
 }
 
 .picks-table td {
   padding: 0.875rem;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--border-soft);
   text-align: center;
   font-size: 0.875rem;
   font-weight: 500;
+  background: var(--bg-surface);
+}
+
+.picks-table tbody tr:nth-child(even) td {
+  background: #FAFBFC;
 }
 
 .picks-table tbody tr:last-child td {
   border-bottom: none;
 }
 
+.picks-table tbody tr:hover td {
+  background: #F5F7FA;
+}
+
 /* Sticky Columns */
 .sticky-col {
   position: sticky;
-  background: var(--bg-primary);
   z-index: 10;
-}
-
-.sticky-col th {
-  background: var(--neutral-50);
 }
 
 .player-col {
@@ -153,41 +129,44 @@
   min-width: 160px;
   text-align: left !important;
   font-weight: 600;
-  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.02);
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.04);
 }
 
 .status-col {
   left: 160px;
   min-width: 100px;
   text-align: center !important;
-  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.02);
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.04);
 }
 
 /* Week Columns */
 .week-col {
-  min-width: 55px;
+  min-width: 60px;
   text-align: center;
 }
 
-/* Pick Cell Styling */
+/* Pick Cell Styling - Circular Rings */
 .pick-cell {
   font-weight: 600;
   font-size: 0.8125rem;
   letter-spacing: 0.025em;
   position: relative;
+  padding: 0.5rem;
 }
 
 .pick-cell .pick-team {
-  display: inline-block;
+  display: none;
 }
 
 .pick-cell .team-logo {
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   object-fit: contain;
   display: inline-block;
   vertical-align: middle;
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+  border-radius: 50%;
+  border: 2px solid transparent;
+  padding: 2px;
   transition: transform 0.2s ease;
 }
 
@@ -195,71 +174,59 @@
   transform: scale(1.1);
 }
 
-.pick-cell.win {
-  background: linear-gradient(135deg, #dcfce7 0%, #f0fdf4 100%);
-  color: var(--success-dark);
+/* Pick Status Rings */
+.pick-cell.win .team-logo {
+  border-color: var(--pick-win);
+  background-color: rgba(34, 197, 94, 0.08);
 }
 
-.pick-cell.loss {
-  background: linear-gradient(135deg, #fef2f2 0%, #fffbfb 100%);
-  color: var(--text-primary);
+.pick-cell.loss .team-logo {
+  border-color: var(--pick-loss);
+  background-color: rgba(239, 68, 68, 0.08);
 }
 
-.pick-cell.strike {
-  position: relative;
+.pick-cell.pending .team-logo {
+  border-color: var(--pick-pending);
+  background-color: rgba(37, 99, 235, 0.08);
 }
 
 /* Eliminated Row Styling */
 .eliminated-row {
-  opacity: 0.45;
+  opacity: 0.5;
 }
 
 .eliminated-row td {
   color: var(--text-muted);
-  background: var(--neutral-50);
-}
-
-.eliminated-row .sticky-col {
-  background: var(--neutral-50);
 }
 
 .eliminated-row .pick-cell {
   opacity: 0.7;
 }
 
-/* Hover Effects */
-.picks-table tbody tr:not(.eliminated-row):hover {
-  background: var(--neutral-50);
-}
-
-.picks-table tbody tr:not(.eliminated-row):hover .sticky-col {
-  background: var(--neutral-50);
-}
-
 /* Status Badge Styling */
 .status-badge {
   display: inline-block;
-  padding: 0.375rem 1rem;
-  border-radius: 20px;
-  font-size: 0.875rem;
+  padding: 0.375rem 0.875rem;
+  border-radius: 9999px;
+  font-size: 0.8125rem;
   font-weight: 600;
   text-align: center;
 }
 
 .status-badge.alive {
-  background: #d1fae5;
-  color: #065f46;
+  background: var(--status-alive-bg);
+  color: var(--status-alive-text);
 }
 
 .status-badge.out {
-  background: #fee2e2;
-  color: #991b1b;
+  background: var(--status-eliminated-bg);
+  color: var(--status-eliminated-text);
 }
 
 /* Player Name */
 .player-name {
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--text-main);
 }
 
 /* Responsive Design */
@@ -274,7 +241,7 @@
   }
 
   .stat-number {
-    font-size: 2rem;
+    font-size: 1.75rem;
   }
 
   .picks-grid-container {
@@ -283,7 +250,7 @@
   }
 
   .picks-grid-container h2 {
-    font-size: 1.25rem;
+    font-size: 1rem;
   }
 
   .player-col {
@@ -302,12 +269,12 @@
   }
 
   .week-col {
-    min-width: 45px;
+    min-width: 50px;
   }
 
   .pick-cell .team-logo {
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
   }
 }
 
@@ -317,11 +284,11 @@
   }
 
   .stat-card h3 {
-    font-size: 0.75rem;
+    font-size: 0.6875rem;
   }
 
   .stat-number {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
   }
 
   .picks-grid-container {
@@ -338,8 +305,8 @@
   }
 
   .pick-cell .team-logo {
-    width: 24px;
-    height: 24px;
+    width: 22px;
+    height: 22px;
   }
 }
 
@@ -360,19 +327,21 @@
 }
 
 .season-selector label {
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   font-weight: 600;
-  color: var(--text-secondary);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .season-dropdown {
   padding: 0.625rem 2.5rem 0.625rem 1rem;
-  border: 2px solid var(--border);
+  border: 1px solid var(--border-strong);
   border-radius: 8px;
   font-size: 1rem;
   font-weight: 600;
-  color: var(--text-primary);
-  background: var(--bg-primary);
+  color: var(--text-main);
+  background: var(--bg-surface);
   cursor: pointer;
   transition: all 0.2s ease;
   box-shadow: var(--shadow-sm);
@@ -383,20 +352,20 @@
 }
 
 .season-dropdown:hover {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: var(--brand-accent);
+  box-shadow: 0 0 0 3px var(--brand-accent-soft);
 }
 
 .season-dropdown:focus {
   outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  border-color: var(--brand-accent);
+  box-shadow: 0 0 0 3px var(--brand-accent-soft);
 }
 
 .winner-banner {
-  background: linear-gradient(135deg, #fef3c7 0%, #fef9c3 100%);
-  border: 2px solid #f59e0b;
-  border-radius: 12px;
+  background: var(--brand-accent-soft);
+  border: 2px solid var(--brand-accent);
+  border-radius: 10px;
   padding: 1.5rem 2rem;
   margin-bottom: 2rem;
   text-align: center;
@@ -405,9 +374,9 @@
 
 .winner-banner h2 {
   margin: 0;
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   font-weight: 700;
-  color: #92400e;
+  color: var(--brand-accent);
   letter-spacing: -0.025em;
 }
 

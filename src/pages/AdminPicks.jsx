@@ -88,16 +88,32 @@ function AdminPicks() {
 
       // Determine current week based on today's date
       const today = new Date()
-      const currentWeek = weeksData?.find(week => {
+      today.setHours(0, 0, 0, 0) // Reset to start of day for consistent comparison
+
+      // First, try to find a week where today falls within the date range
+      let currentWeek = weeksData?.find(week => {
         const startDate = new Date(week.start_date)
         const endDate = new Date(week.end_date)
+        startDate.setHours(0, 0, 0, 0)
+        endDate.setHours(23, 59, 59, 999)
         return today >= startDate && today <= endDate
       })
 
-      // If no week matches today's date, use the first incomplete week
-      const currentWeekNum = currentWeek?.week_number ||
-        weeksData?.find(w => !w.is_complete)?.week_number ||
-        1
+      // If no exact match, find the next upcoming week (future week closest to today)
+      if (!currentWeek) {
+        currentWeek = weeksData?.find(week => {
+          const startDate = new Date(week.start_date)
+          startDate.setHours(0, 0, 0, 0)
+          return startDate > today
+        })
+      }
+
+      // If no future weeks, use the last week in the season
+      if (!currentWeek && weeksData?.length > 0) {
+        currentWeek = weeksData[weeksData.length - 1]
+      }
+
+      const currentWeekNum = currentWeek?.week_number || 1
 
       setCurrentWeekNumber(currentWeekNum)
       setPlayers(playersData || [])

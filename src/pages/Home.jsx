@@ -135,25 +135,16 @@ function Home() {
 
       <div className="stats-cards">
         <div className="stat-card">
-          <div className="stat-icon people">👥</div>
-          <div className="stat-content">
-            <h3>Total Participants</h3>
-            <p className="stat-number">{stats.totalPlayers}</p>
-          </div>
+          <h3>Total Participants</h3>
+          <p className="stat-number">{stats.totalPlayers}</p>
         </div>
         <div className="stat-card">
-          <div className="stat-icon alive">💚</div>
-          <div className="stat-content">
-            <h3>Still Alive</h3>
-            <p className="stat-number">{stats.activePlayers}</p>
-          </div>
+          <h3>Still Alive</h3>
+          <p className="stat-number">{stats.activePlayers}</p>
         </div>
         <div className="stat-card">
-          <div className="stat-icon pot">💰</div>
-          <div className="stat-content">
-            <h3>Total Pot</h3>
-            <p className="stat-number">${stats.totalPot}</p>
-          </div>
+          <h3>Total Pot</h3>
+          <p className="stat-number">${stats.totalPot}</p>
         </div>
       </div>
 

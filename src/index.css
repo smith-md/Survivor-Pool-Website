@@ -8,42 +8,49 @@
 }
 
 :root {
-  /* Modern color palette */
-  --primary: #2563eb;
-  --primary-dark: #1e40af;
-  --primary-light: #3b82f6;
+  /* Design System - Color Palette */
 
-  --success: #10b981;
-  --success-dark: #059669;
-  --success-light: #34d399;
+  /* Neutrals */
+  --bg-page: #F2F4F8;
+  --bg-surface: #FFFFFF;
+  --border-soft: #D6DCE6;
+  --border-strong: #C0C7D4;
+  --text-main: #101524;
+  --text-muted: #6B7280;
+  --divider-subtle: #E0E4ED;
 
-  --danger: #ef4444;
-  --danger-dark: #dc2626;
-  --danger-light: #f87171;
+  /* Brand / Accent */
+  --brand-header: #3C4D73;
+  --brand-accent: #2563EB;
+  --brand-accent-soft: #E1ECFF;
 
-  --warning: #f59e0b;
-  --neutral-50: #f8fafc;
-  --neutral-100: #f1f5f9;
-  --neutral-200: #e2e8f0;
-  --neutral-300: #cbd5e1;
-  --neutral-400: #94a3b8;
-  --neutral-500: #64748b;
-  --neutral-600: #475569;
-  --neutral-700: #334155;
-  --neutral-800: #1e293b;
-  --neutral-900: #0f172a;
+  /* Status Colors */
+  --status-alive-bg: #E9F9EE;
+  --status-alive-text: #145A32;
+  --status-eliminated-bg: #FEECEC;
+  --status-eliminated-text: #B91C1C;
 
-  /* Semantic colors */
-  --bg-primary: #ffffff;
-  --bg-secondary: var(--neutral-50);
-  --text-primary: var(--neutral-900);
-  --text-secondary: var(--neutral-600);
-  --text-muted: var(--neutral-500);
-  --border: var(--neutral-200);
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  /* Pick Status Ring */
+  --pick-win: #22C55E;
+  --pick-loss: #EF4444;
+  --pick-pending: #2563EB;
+
+  /* Table */
+  --table-header-bg: #E4E8F1;
+
+  /* Legacy Aliases for Compatibility */
+  --primary: var(--brand-accent);
+  --bg-primary: var(--bg-surface);
+  --bg-secondary: var(--bg-page);
+  --text-primary: var(--text-main);
+  --text-secondary: var(--text-muted);
+  --border: var(--border-soft);
+
+  /* Shadows - Medium Depth */
+  --shadow-sm: 0 2px 4px 0 rgb(0 0 0 / 0.06);
+  --shadow: 0 2px 8px 0 rgb(0 0 0 / 0.08);
+  --shadow-md: 0 4px 12px 0 rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 8px 16px 0 rgb(0 0 0 / 0.12);
 
   /* Typography */
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', sans-serif;
@@ -60,7 +67,7 @@ body {
   font-size: 16px;
   line-height: 1.6;
   color: var(--text-primary);
-  background-color: var(--bg-secondary);
+  background-color: var(--bg-page);
   min-height: 100vh;
 }
 
