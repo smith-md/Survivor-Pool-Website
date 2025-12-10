@@ -380,9 +380,10 @@ function AdminPicks() {
                   <th
                     key={week.id}
                     className={`week-col ${week.week_number === currentWeekNumber ? 'current-week' : ''}`}
+                    title={`Week ${week.week_number}${week.week_number === currentWeekNumber ? ' (Current)' : ''}`}
                   >
-                    Week {week.week_number}
-                    {week.week_number === currentWeekNumber && <span className="current-badge">Current</span>}
+                    {week.week_number}
+                    {week.week_number === currentWeekNumber && <span className="current-badge">*</span>}
                   </th>
                 ))}
               </tr>
