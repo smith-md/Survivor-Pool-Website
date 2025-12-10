@@ -43,17 +43,17 @@ function AdminPlayers() {
 
       if (currentError) throw currentError
 
-      // Sort with priority: Pending Buyback > Not Paid > Everyone else (alphabetically)
+      // Sort with priority: Needs Buyback Decision > Not Paid > Everyone else (alphabetically)
       const sortedPlayers = (current || []).sort((a, b) => {
-        // Priority 1: Pending buyback players at top
-        const aPendingBuyback = a.buyback_status === 'pending'
-        const bPendingBuyback = b.buyback_status === 'pending'
-        if (aPendingBuyback && !bPendingBuyback) return -1
-        if (!aPendingBuyback && bPendingBuyback) return 1
+        // Priority 1: Eliminated players who haven't bought back (need buyback decision)
+        const aNeedsBuyback = a.is_eliminated && !a.has_bought_back
+        const bNeedsBuyback = b.is_eliminated && !b.has_bought_back
+        if (aNeedsBuyback && !bNeedsBuyback) return -1
+        if (!aNeedsBuyback && bNeedsBuyback) return 1
 
-        // Priority 2: Not paid players
-        const aNotPaid = !a.has_paid
-        const bNotPaid = !b.has_paid
+        // Priority 2: Players who haven't paid entry fee
+        const aNotPaid = !a.entry_fee_paid
+        const bNotPaid = !b.entry_fee_paid
         if (aNotPaid && !bNotPaid) return -1
         if (!aNotPaid && bNotPaid) return 1
 
