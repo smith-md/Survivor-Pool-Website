@@ -1,10 +1,12 @@
+/* Mobile-First App Styles */
+
 .app {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
-/* Navbar */
+/* Navbar - Mobile First */
 .navbar {
   background-color: var(--brand-header);
   height: 64px;
@@ -17,7 +19,7 @@
 .nav-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 1rem;
   height: 100%;
   display: flex;
   justify-content: space-between;
@@ -25,7 +27,7 @@
 }
 
 .nav-logo {
-  font-size: 1.125rem;
+  font-size: 1rem;
   font-weight: 700;
   color: #FFFFFF;
   text-decoration: none;
@@ -39,7 +41,7 @@
 
 .nav-links {
   display: flex;
-  gap: 2rem;
+  gap: 1rem;
   align-items: center;
 }
 
@@ -47,10 +49,13 @@
   color: #FFFFFF;
   text-decoration: none;
   font-weight: 500;
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   transition: all 0.15s ease;
   position: relative;
   padding-bottom: 2px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
 }
 
 .nav-link:hover {
@@ -68,13 +73,13 @@
   opacity: 1;
 }
 
-/* Main Content */
+/* Main Content - Mobile First */
 .main-content {
   flex: 1;
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
-  padding: 2.5rem 2rem;
+  padding: 1.5rem 1rem;
 }
 
 .loading {
@@ -85,10 +90,10 @@
   font-weight: 500;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
+/* Tablet Styles (768px+) */
+@media (min-width: 768px) {
   .nav-container {
-    padding: 1rem 1.5rem;
+    padding: 0 1.5rem;
   }
 
   .nav-logo {
@@ -108,16 +113,21 @@
   }
 }
 
-@media (max-width: 480px) {
+/* Desktop Styles (1024px+) */
+@media (min-width: 1024px) {
   .nav-container {
-    padding: 1rem;
+    padding: 0 2rem;
   }
 
   .nav-links {
-    gap: 1rem;
+    gap: 2rem;
+  }
+
+  .nav-link {
+    font-size: 0.9375rem;
   }
 
   .main-content {
-    padding: 1.5rem 1rem;
+    padding: 2.5rem 2rem;
   }
 }

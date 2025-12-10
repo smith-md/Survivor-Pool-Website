@@ -128,47 +128,85 @@
   font-size: 1.875rem;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
+/* Mobile-First Responsive Styles */
+
+/* Mobile base styles */
+.admin-header {
+  flex-direction: column;
+  align-items: stretch;
+  margin-bottom: 2rem;
+}
+
+.admin-dashboard h1 {
+  font-size: 1.5rem;
+}
+
+.admin-subtitle {
+  font-size: 0.875rem;
+}
+
+.logout-button {
+  width: 100%;
+  min-height: 48px;
+}
+
+.admin-cards {
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+.admin-card {
+  padding: 2rem 1.5rem;
+  min-height: 44px;
+}
+
+.admin-card-icon {
+  font-size: 2.5rem;
+}
+
+.admin-card h3 {
+  font-size: 1.25rem;
+}
+
+.admin-card p {
+  font-size: 0.875rem;
+}
+
+.admin-page {
+  padding: 1.5rem 1rem;
+}
+
+/* Tablet Styles (768px+) */
+@media (min-width: 768px) {
   .admin-header {
-    flex-direction: column;
-    align-items: stretch;
-    margin-bottom: 2rem;
+    flex-direction: row;
+    align-items: flex-start;
+    margin-bottom: 3rem;
   }
 
   .admin-dashboard h1 {
     font-size: 1.75rem;
   }
 
+  .admin-subtitle {
+    font-size: 1rem;
+  }
+
   .logout-button {
-    width: 100%;
+    width: auto;
   }
 
   .admin-cards {
-    grid-template-columns: 1fr;
-    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
   }
 
   .admin-card {
     padding: 2rem 1.5rem;
   }
 
-  .admin-page {
-    padding: 2rem 1.5rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .admin-dashboard h1 {
-    font-size: 1.5rem;
-  }
-
-  .admin-subtitle {
-    font-size: 0.875rem;
-  }
-
   .admin-card-icon {
-    font-size: 2.5rem;
+    font-size: 2.75rem;
   }
 
   .admin-card h3 {
@@ -180,6 +218,37 @@
   }
 
   .admin-page {
-    padding: 1.5rem 1rem;
+    padding: 2rem 1.5rem;
+  }
+}
+
+/* Desktop Styles (1024px+) */
+@media (min-width: 1024px) {
+  .admin-dashboard h1 {
+    font-size: 2rem;
+  }
+
+  .admin-cards {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+
+  .admin-card {
+    padding: 2.5rem 2rem;
+  }
+
+  .admin-card-icon {
+    font-size: 3rem;
+  }
+
+  .admin-card h3 {
+    font-size: 1.375rem;
+  }
+
+  .admin-card p {
+    font-size: 0.9375rem;
+  }
+
+  .admin-page {
+    padding: 2.5rem;
   }
 }

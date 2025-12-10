@@ -1,28 +1,30 @@
+/* Mobile-First Home Page Styles */
+
 .home-page {
   max-width: 100%;
   width: 100%;
-  padding: 0.5rem;
+  padding: 1rem;
 }
 
 .home-page h1 {
   margin-bottom: 1.5rem;
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: var(--text-main);
   letter-spacing: -0.025em;
 }
 
-/* Stats Cards */
+/* Stats Cards - Mobile First */
 .stats-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: 1fr;
   gap: 1rem;
   margin-bottom: 1.5rem;
 }
 
 .stat-card {
   background: var(--bg-surface);
-  padding: 1rem;
+  padding: 1.25rem;
   border-radius: 10px;
   border: 1px solid var(--border-strong);
   box-shadow: var(--shadow-md);
@@ -37,7 +39,7 @@
 }
 
 .stat-card h3 {
-  font-size: 0.75rem;
+  font-size: 0.6875rem;
   font-weight: 600;
   color: var(--text-muted);
   margin: 0;
@@ -46,7 +48,7 @@
 }
 
 .stat-number {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: var(--text-main);
   line-height: 1;
@@ -55,7 +57,7 @@
 /* Picks Grid Container */
 .picks-grid-container {
   background: var(--bg-surface);
-  padding: 0.5rem;
+  padding: 1rem;
   border-radius: 8px;
   border: 1px solid var(--border-strong);
   box-shadow: var(--shadow-md);
@@ -63,12 +65,12 @@
 
 .picks-grid-container h2 {
   margin-bottom: 1rem;
-  font-size: 1.125rem;
+  font-size: 1rem;
   font-weight: 600;
   color: var(--text-main);
 }
 
-/* Table Wrapper */
+/* Table Wrapper - Touch Optimized */
 .table-wrapper {
   overflow-x: auto;
   overflow-y: auto;
@@ -99,17 +101,17 @@
   background: #555;
 }
 
-/* Picks Table */
+/* Picks Table - Mobile First */
 .picks-table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
 }
 
 .picks-table th {
   text-align: left;
-  padding: 0.875rem;
+  padding: 0.625rem 0.5rem;
   border-bottom: 1px solid var(--border-soft);
   font-weight: 600;
   color: var(--text-muted);
@@ -121,10 +123,10 @@
 }
 
 .picks-table td {
-  padding: 0.875rem;
+  padding: 0.625rem 0.5rem;
   border-bottom: 1px solid var(--border-soft);
   text-align: center;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   font-weight: 500;
   background: var(--bg-surface);
 }
@@ -141,7 +143,7 @@
   background: #F5F7FA;
 }
 
-/* Sticky Columns */
+/* Sticky Columns - Mobile */
 .sticky-col {
   position: sticky;
   z-index: 10;
@@ -149,9 +151,9 @@
 
 .player-col {
   left: 0;
-  min-width: 120px;
-  max-width: 120px;
-  width: 120px;
+  min-width: 110px;
+  max-width: 110px;
+  width: 110px;
   text-align: left !important;
   font-weight: 600;
   box-shadow: 2px 0 4px rgba(0, 0, 0, 0.04);
@@ -160,10 +162,10 @@
 }
 
 .status-col {
-  left: 120px;
-  min-width: 55px;
-  max-width: 55px;
-  width: 55px;
+  left: 110px;
+  min-width: 70px;
+  max-width: 70px;
+  width: 70px;
   text-align: center !important;
   box-shadow: 2px 0 4px rgba(0, 0, 0, 0.04);
   padding: 0.5rem 0.125rem !important;
@@ -193,8 +195,8 @@
 }
 
 .pick-cell .team-logo {
-  width: 28px;
-  height: 28px;
+  width: 22px;
+  height: 22px;
   object-fit: contain;
   display: inline-block;
   vertical-align: middle;
@@ -263,94 +265,12 @@
   color: var(--text-main);
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .stats-cards {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-
-  .stat-card {
-    padding: 1.25rem;
-  }
-
-  .stat-number {
-    font-size: 1.75rem;
-  }
-
-  .picks-grid-container {
-    padding: 1.25rem;
-    border-radius: 8px;
-  }
-
-  .picks-grid-container h2 {
-    font-size: 1rem;
-  }
-
-  .player-col {
-    min-width: 130px;
-  }
-
-  .status-col {
-    left: 130px;
-    min-width: 80px;
-  }
-
-  .picks-table th,
-  .picks-table td {
-    padding: 0.625rem 0.5rem;
-    font-size: 0.8125rem;
-  }
-
-  .week-col {
-    min-width: 50px;
-  }
-
-  .pick-cell .team-logo {
-    width: 24px;
-    height: 24px;
-  }
-}
-
-@media (max-width: 480px) {
-  .home-page h1 {
-    font-size: 1.5rem;
-  }
-
-  .stat-card h3 {
-    font-size: 0.6875rem;
-  }
-
-  .stat-number {
-    font-size: 1.5rem;
-  }
-
-  .picks-grid-container {
-    padding: 1rem;
-  }
-
-  .player-col {
-    min-width: 110px;
-  }
-
-  .status-col {
-    left: 110px;
-    min-width: 70px;
-  }
-
-  .pick-cell .team-logo {
-    width: 22px;
-    height: 22px;
-  }
-}
-
 /* Archive Page Specific Styles */
 .archive-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   margin-bottom: 2rem;
-  flex-wrap: wrap;
   gap: 1rem;
 }
 
@@ -358,6 +278,7 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  width: 100%;
 }
 
 .season-selector label {
@@ -383,6 +304,7 @@
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 0.75rem center;
+  flex: 1;
 }
 
 .season-dropdown:hover {
@@ -400,7 +322,7 @@
   background: var(--brand-accent-soft);
   border: 2px solid var(--brand-accent);
   border-radius: 10px;
-  padding: 1.5rem 2rem;
+  padding: 1.25rem 1.5rem;
   margin-bottom: 2rem;
   text-align: center;
   box-shadow: var(--shadow-md);
@@ -408,31 +330,155 @@
 
 .winner-banner h2 {
   margin: 0;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: var(--brand-accent);
   letter-spacing: -0.025em;
 }
 
-@media (max-width: 768px) {
+/* Tablet Styles (768px+) */
+@media (min-width: 768px) {
+  .home-page {
+    padding: 1.5rem;
+  }
+
+  .home-page h1 {
+    font-size: 1.875rem;
+  }
+
+  .stats-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .stat-card {
+    padding: 1rem;
+  }
+
+  .stat-card h3 {
+    font-size: 0.75rem;
+  }
+
+  .stat-number {
+    font-size: 1.75rem;
+  }
+
+  .picks-grid-container {
+    padding: 1.25rem;
+  }
+
+  .picks-grid-container h2 {
+    font-size: 1.125rem;
+  }
+
+  .player-col {
+    min-width: 130px;
+    max-width: 130px;
+    width: 130px;
+  }
+
+  .status-col {
+    left: 130px;
+    min-width: 80px;
+    max-width: 80px;
+    width: 80px;
+  }
+
+  .week-col {
+    min-width: 50px;
+    max-width: 50px;
+    width: 50px;
+  }
+
+  .pick-cell .team-logo {
+    width: 24px;
+    height: 24px;
+  }
+
+  .picks-table th,
+  .picks-table td {
+    padding: 0.625rem 0.5rem;
+    font-size: 0.8125rem;
+  }
+
   .archive-header {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
   }
 
   .season-selector {
-    width: 100%;
+    width: auto;
   }
 
   .season-dropdown {
-    flex: 1;
-  }
-
-  .winner-banner h2 {
-    font-size: 1.25rem;
+    flex: initial;
   }
 
   .winner-banner {
-    padding: 1.25rem 1.5rem;
+    padding: 1.5rem 2rem;
+  }
+
+  .winner-banner h2 {
+    font-size: 1.5rem;
+  }
+}
+
+/* Desktop Styles (1024px+) */
+@media (min-width: 1024px) {
+  .home-page {
+    padding: 0.5rem;
+  }
+
+  .home-page h1 {
+    font-size: 2rem;
+  }
+
+  .stats-cards {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+
+  .stat-card h3 {
+    font-size: 0.75rem;
+  }
+
+  .stat-number {
+    font-size: 2rem;
+  }
+
+  .picks-grid-container {
+    padding: 0.5rem;
+  }
+
+  .player-col {
+    min-width: 120px;
+    max-width: 120px;
+    width: 120px;
+  }
+
+  .status-col {
+    left: 120px;
+    min-width: 55px;
+    max-width: 55px;
+    width: 55px;
+  }
+
+  .week-col {
+    min-width: 32px;
+    max-width: 32px;
+    width: 32px;
+  }
+
+  .pick-cell .team-logo {
+    width: 28px;
+    height: 28px;
+  }
+
+  .picks-table th {
+    padding: 0.875rem;
+  }
+
+  .picks-table td {
+    padding: 0.875rem;
+    font-size: 0.875rem;
   }
 }

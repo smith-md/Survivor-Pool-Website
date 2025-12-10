@@ -1,10 +1,12 @@
+/* Mobile-First Admin Login Styles */
+
 .admin-login-page {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 1.5rem;
+  padding: 1rem;
 }
 
 .login-container {
@@ -15,7 +17,7 @@
 .login-card {
   background: var(--bg-primary);
   border-radius: 16px;
-  padding: 3rem 2.5rem;
+  padding: 2.5rem 2rem;
   box-shadow: var(--shadow-lg), 0 20px 60px rgba(0, 0, 0, 0.3);
 }
 
@@ -23,7 +25,7 @@
   margin: 0 0 0.5rem 0;
   text-align: center;
   color: var(--text-primary);
-  font-size: 2rem;
+  font-size: 1.75rem;
   font-weight: 700;
   letter-spacing: -0.025em;
 }
@@ -32,7 +34,7 @@
   text-align: center;
   color: var(--text-secondary);
   margin: 0 0 2.5rem 0;
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   font-weight: 500;
 }
 
@@ -62,6 +64,8 @@
   transition: all 0.2s ease;
   background: var(--bg-primary);
   color: var(--text-primary);
+  min-height: 44px;
+  width: 100%;
 }
 
 .form-group input:focus {
@@ -96,15 +100,17 @@
   cursor: pointer;
   transition: all 0.2s ease;
   margin-top: 0.5rem;
+  min-height: 48px;
+  width: 100%;
 }
 
-.login-button:hover {
+.login-button:hover:not(:disabled) {
   background: var(--primary-dark);
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
 }
 
-.login-button:active {
+.login-button:active:not(:disabled) {
   transform: translateY(0);
 }
 
@@ -121,26 +127,31 @@
   font-size: 0.875rem;
   font-weight: 500;
   transition: color 0.15s ease;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem;
 }
 
 .back-link:hover {
   color: var(--primary);
 }
 
-@media (max-width: 480px) {
+/* Tablet Styles (768px+) */
+@media (min-width: 768px) {
   .admin-login-page {
-    padding: 1rem;
+    padding: 1.5rem;
   }
 
   .login-card {
-    padding: 2.5rem 2rem;
+    padding: 3rem 2.5rem;
   }
 
   .login-card h1 {
-    font-size: 1.75rem;
+    font-size: 2rem;
   }
 
   .login-subtitle {
-    font-size: 0.875rem;
+    font-size: 0.9375rem;
   }
 }
