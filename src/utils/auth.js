@@ -1,26 +1,11 @@
-// Simple authentication utility for admin access
+// Authentication utility using Supabase Auth
+import { supabase } from '../lib/supabase'
 
-export function isAuthenticated() {
-  const auth = sessionStorage.getItem('adminAuth')
-  const authTime = sessionStorage.getItem('adminAuthTime')
-
-  if (!auth || !authTime) {
-    return false
-  }
-
-  // Check if session is still valid (24 hours)
-  const twentyFourHours = 24 * 60 * 60 * 1000
-  const isExpired = Date.now() - parseInt(authTime) > twentyFourHours
-
-  if (isExpired) {
-    logout()
-    return false
-  }
-
-  return auth === 'true'
+export async function isAuthenticated() {
+  const { data: { session } } = await supabase.auth.getSession()
+  return !!session
 }
 
-export function logout() {
-  sessionStorage.removeItem('adminAuth')
-  sessionStorage.removeItem('adminAuthTime')
+export async function logout() {
+  await supabase.auth.signOut()
 }

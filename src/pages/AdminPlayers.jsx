@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { supabaseAdmin } from '../lib/supabase'
+import { supabase } from '../lib/supabase'
 import './AdminPlayers.css'
 
 function AdminPlayers() {
@@ -36,7 +36,7 @@ function AdminPlayers() {
       setLoading(true)
 
       // Fetch current season players
-      const { data: current, error: currentError } = await supabaseAdmin
+      const { data: current, error: currentError } = await supabase
         .from('players')
         .select('*')
         .eq('season_year', currentYear)
@@ -66,7 +66,7 @@ function AdminPlayers() {
       setCurrentPlayers(sortedPlayers)
 
       // Fetch previous season players (who aren't in current season)
-      const { data: allPrevious, error: previousError } = await supabaseAdmin
+      const { data: allPrevious, error: previousError } = await supabase
         .from('players')
         .select('first_name, last_name')
         .neq('season_year', currentYear)
@@ -107,7 +107,7 @@ function AdminPlayers() {
     }
 
     try {
-      const { error } = await supabaseAdmin
+      const { error } = await supabase
         .from('players')
         .insert([{
           first_name: newPlayer.first_name.trim(),
@@ -216,7 +216,7 @@ function AdminPlayers() {
           }
         }
 
-        const { error } = await supabaseAdmin
+        const { error } = await supabase
           .from('players')
           .update(updateData)
           .eq('id', playerId)
@@ -249,7 +249,7 @@ function AdminPlayers() {
     }
 
     try {
-      const { error } = await supabaseAdmin
+      const { error } = await supabase
         .from('players')
         .update({
           first_name: editingPlayer.first_name.trim(),
@@ -278,7 +278,7 @@ function AdminPlayers() {
 
   async function confirmDelete() {
     try {
-      const { error } = await supabaseAdmin
+      const { error } = await supabase
         .from('players')
         .delete()
         .eq('id', playerToDelete.id)
@@ -303,7 +303,7 @@ function AdminPlayers() {
     }
 
     try {
-      const { error } = await supabaseAdmin
+      const { error } = await supabase
         .from('players')
         .insert([{
           first_name: player.first_name,
@@ -331,7 +331,7 @@ function AdminPlayers() {
 
   async function togglePaymentStatus(playerId, currentStatus) {
     try {
-      const { error } = await supabaseAdmin
+      const { error } = await supabase
         .from('players')
         .update({ entry_fee_paid: !currentStatus })
         .eq('id', playerId)
@@ -365,7 +365,7 @@ function AdminPlayers() {
         updateData.is_active = true
       }
 
-      const { error } = await supabaseAdmin
+      const { error } = await supabase
         .from('players')
         .update(updateData)
         .eq('id', player.id)

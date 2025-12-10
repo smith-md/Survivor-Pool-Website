@@ -1,9 +1,42 @@
+import { useState, useEffect } from 'react'
 import { Navigate } from 'react-router-dom'
-import { isAuthenticated } from '../utils/auth'
+import { supabase } from '../lib/supabase'
 
 function ProtectedRoute({ children }) {
-  if (!isAuthenticated()) {
-    // Redirect to login page if not authenticated
+  const [session, setSession] = useState(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    // Check current session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session)
+      setLoading(false)
+    })
+
+    // Listen for auth changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session)
+    })
+
+    return () => subscription.unsubscribe()
+  }, [])
+
+  if (loading) {
+    return (
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh'
+      }}>
+        Loading...
+      </div>
+    )
+  }
+
+  if (!session) {
     return <Navigate to="/admin/login" replace />
   }
 

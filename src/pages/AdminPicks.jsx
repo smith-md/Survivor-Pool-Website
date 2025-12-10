@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { supabaseAdmin } from '../lib/supabase'
+import { supabase } from '../lib/supabase'
 import './AdminPicks.css'
 
 function AdminPicks() {
@@ -32,7 +32,7 @@ function AdminPicks() {
       setLoading(true)
 
       // Fetch all players for current season
-      const { data: playersData, error: playersError } = await supabaseAdmin
+      const { data: playersData, error: playersError } = await supabase
         .from('players')
         .select('*')
         .eq('season_year', currentYear)
@@ -43,7 +43,7 @@ function AdminPicks() {
       if (playersError) throw playersError
 
       // Fetch all weeks for current season
-      const { data: weeksData, error: weeksError } = await supabaseAdmin
+      const { data: weeksData, error: weeksError } = await supabase
         .from('weeks')
         .select('*')
         .eq('season_year', currentYear)
@@ -52,7 +52,7 @@ function AdminPicks() {
       if (weeksError) throw weeksError
 
       // Fetch all NFL teams
-      const { data: teamsData, error: teamsError } = await supabaseAdmin
+      const { data: teamsData, error: teamsError } = await supabase
         .from('nfl_teams')
         .select('*')
         .order('team_abbreviation', { ascending: true })
@@ -60,7 +60,7 @@ function AdminPicks() {
       if (teamsError) throw teamsError
 
       // Fetch all picks
-      const { data: picksData, error: picksError } = await supabaseAdmin
+      const { data: picksData, error: picksError } = await supabase
         .from('picks')
         .select(`
           id,
@@ -191,7 +191,7 @@ function AdminPicks() {
           if (!teamId) {
             // Delete pick if empty selection
             if (currentPick?.pick_id) {
-              const { error } = await supabaseAdmin
+              const { error } = await supabase
                 .from('picks')
                 .delete()
                 .eq('id', currentPick.pick_id)
@@ -202,7 +202,7 @@ function AdminPicks() {
           } else {
             if (currentPick?.pick_id) {
               // Update existing pick
-              const { error } = await supabaseAdmin
+              const { error } = await supabase
                 .from('picks')
                 .update({ team_id: teamId })
                 .eq('id', currentPick.pick_id)
@@ -211,7 +211,7 @@ function AdminPicks() {
               successCount++
             } else {
               // Insert new pick
-              const { error } = await supabaseAdmin
+              const { error } = await supabase
                 .from('picks')
                 .insert([{
                   player_id: playerId,
