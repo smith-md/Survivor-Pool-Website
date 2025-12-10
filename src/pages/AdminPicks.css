@@ -380,9 +380,9 @@
 }
 
 .picks-table .status-col {
-  min-width: 65px;
-  max-width: 65px;
-  width: 65px;
+  min-width: 55px;
+  max-width: 55px;
+  width: 55px;
   left: 120px;
   padding: 0.5rem 0.125rem !important;
 }
@@ -453,9 +453,9 @@
 
 .status-badge {
   display: inline-block;
-  padding: 0.375rem 0.875rem;
+  padding: 0.25rem 0.5rem;
   border-radius: 20px;
-  font-size: 0.8125rem;
+  font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.025em;
 }
