@@ -5,7 +5,13 @@
       "Bash(git add:*)",
       "Bash(git commit -m \"$(cat <<''EOF''\nHardcode admin credentials for reliable authentication\n\nChanged from environment variable-based authentication to hardcoded credentials due to persistent issues with .env file loading in the development environment.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
       "Bash(node update-pick-results.cjs:*)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "Bash(git branch:*)",
+      "mcp__simple-commands__git_status",
+      "mcp__simple-commands__git_diff",
+      "mcp__simple-commands__git_log_recent",
+      "Bash(git commit -m \"$(cat <<''EOF''\nAdd debug logging for Supabase environment variables\n\nAdded console logging to verify Supabase URL and anon key are properly loaded in production environment.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git push)"
     ],
     "deny": [],
     "ask": []
