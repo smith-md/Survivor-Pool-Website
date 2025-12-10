@@ -72,13 +72,13 @@
   overflow-x: auto;
   overflow-y: auto;
   max-width: 100%;
-  max-height: calc(100vh - 400px);
+  max-height: 75vh;
   border-radius: 10px;
   border: 1px solid var(--border-soft);
   -webkit-overflow-scrolling: touch;
 }
 
-/* Make scrollbars visible and styled */
+/* Scrollbar styling */
 .table-wrapper::-webkit-scrollbar {
   width: 12px;
   height: 12px;

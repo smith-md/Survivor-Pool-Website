@@ -308,11 +308,11 @@
 .table-wrapper {
   overflow-x: auto;
   overflow-y: auto;
-  max-height: calc(100vh - 350px);
+  max-height: 75vh;
   -webkit-overflow-scrolling: touch;
 }
 
-/* Make scrollbars visible and styled */
+/* Scrollbar styling */
 .table-wrapper::-webkit-scrollbar {
   width: 12px;
   height: 12px;
