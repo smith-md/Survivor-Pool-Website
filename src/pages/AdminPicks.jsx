@@ -8,6 +8,7 @@ function AdminPicks() {
   const [weeks, setWeeks] = useState([])
   const [teams, setTeams] = useState([])
   const [picks, setPicks] = useState({}) // { playerId: { weekNumber: { team_id, team_abbreviation } } }
+  const [pendingChanges, setPendingChanges] = useState({}) // Track unsaved changes
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [notification, setNotification] = useState(null)
@@ -128,73 +129,128 @@ function AdminPicks() {
     }
   }
 
-  async function handlePickChange(playerId, weekNumber, weekId, teamId) {
+  function handlePickChange(playerId, weekNumber, weekId, teamId) {
+    // Check if player has already used this team in a DIFFERENT week
+    if (teamId) {
+      const hasUsedTeamInOtherWeek = Object.entries(picks[playerId] || {}).some(
+        ([weekNum, pick]) => pick.team_id === teamId && parseInt(weekNum) !== weekNumber
+      )
+
+      if (hasUsedTeamInOtherWeek) {
+        showNotification('Player has already used this team in another week!', 'error')
+        return
+      }
+    }
+
+    // Store the change locally without saving to database
+    const changeKey = `${playerId}-${weekNumber}`
+    setPendingChanges(prev => ({
+      ...prev,
+      [changeKey]: { playerId, weekNumber, weekId, teamId }
+    }))
+
+    // Update local picks state for immediate UI feedback
+    const newPicks = { ...picks }
+    if (!newPicks[playerId]) {
+      newPicks[playerId] = {}
+    }
+
+    if (teamId) {
+      const team = teams.find(t => t.id === teamId)
+      newPicks[playerId][weekNumber] = {
+        ...picks[playerId]?.[weekNumber],
+        team_id: teamId,
+        team_abbreviation: team?.team_abbreviation || ''
+      }
+    } else {
+      // Mark for deletion
+      if (newPicks[playerId][weekNumber]) {
+        delete newPicks[playerId][weekNumber]
+      }
+    }
+
+    setPicks(newPicks)
+  }
+
+  async function saveAllChanges() {
+    if (Object.keys(pendingChanges).length === 0) {
+      showNotification('No changes to save', 'error')
+      return
+    }
+
     setSaving(true)
+    let successCount = 0
+    let errorCount = 0
 
     try {
-      const currentPick = picks[playerId]?.[weekNumber]
+      for (const change of Object.values(pendingChanges)) {
+        const { playerId, weekNumber, weekId, teamId } = change
+        const currentPick = picks[playerId]?.[weekNumber]
 
-      if (!teamId) {
-        // Delete pick if empty selection
-        if (currentPick?.pick_id) {
-          const { error } = await supabaseAdmin
-            .from('picks')
-            .delete()
-            .eq('id', currentPick.pick_id)
+        try {
+          if (!teamId) {
+            // Delete pick if empty selection
+            if (currentPick?.pick_id) {
+              const { error } = await supabaseAdmin
+                .from('picks')
+                .delete()
+                .eq('id', currentPick.pick_id)
 
-          if (error) throw error
+              if (error) throw error
+              successCount++
+            }
+          } else {
+            if (currentPick?.pick_id) {
+              // Update existing pick
+              const { error } = await supabaseAdmin
+                .from('picks')
+                .update({ team_id: teamId })
+                .eq('id', currentPick.pick_id)
 
-          // Update local state
-          const newPicks = { ...picks }
-          if (newPicks[playerId]) {
-            delete newPicks[playerId][weekNumber]
+              if (error) throw error
+              successCount++
+            } else {
+              // Insert new pick
+              const { error } = await supabaseAdmin
+                .from('picks')
+                .insert([{
+                  player_id: playerId,
+                  week_id: weekId,
+                  team_id: teamId
+                }])
+
+              if (error) throw error
+              successCount++
+            }
           }
-          setPicks(newPicks)
-          showNotification('Pick removed')
+        } catch (error) {
+          console.error('Error saving individual pick:', error)
+          errorCount++
         }
+      }
+
+      // Refresh data after all saves
+      await fetchData()
+      setPendingChanges({})
+
+      if (errorCount === 0) {
+        showNotification(`Successfully saved ${successCount} pick${successCount !== 1 ? 's' : ''}!`)
       } else {
-        // Check if player has already used this team in a DIFFERENT week
-        const hasUsedTeamInOtherWeek = Object.entries(picks[playerId] || {}).some(
-          ([weekNum, pick]) => pick.team_id === teamId && parseInt(weekNum) !== weekNumber
-        )
-
-        if (hasUsedTeamInOtherWeek) {
-          showNotification('Player has already used this team in another week!', 'error')
-          setSaving(false)
-          return
-        }
-
-        if (currentPick?.pick_id) {
-          // Update existing pick
-          const { error } = await supabaseAdmin
-            .from('picks')
-            .update({ team_id: teamId })
-            .eq('id', currentPick.pick_id)
-
-          if (error) throw error
-        } else {
-          // Insert new pick
-          const { error } = await supabaseAdmin
-            .from('picks')
-            .insert([{
-              player_id: playerId,
-              week_id: weekId,
-              team_id: teamId
-            }])
-
-          if (error) throw error
-        }
-
-        // Refresh data to get the updated pick
-        await fetchData()
-        showNotification('Pick saved!')
+        showNotification(`Saved ${successCount} picks, ${errorCount} failed`, 'error')
       }
     } catch (error) {
-      console.error('Error saving pick:', error)
-      showNotification('Error saving pick: ' + error.message, 'error')
+      console.error('Error saving changes:', error)
+      showNotification('Error saving changes: ' + error.message, 'error')
     } finally {
       setSaving(false)
     }
+  }
+
+  function discardChanges() {
+    setPendingChanges({})
+    // Reset picks to original state by refetching
+    fetchData()
+    showNotification('Changes discarded')
   }
 
   function getPlayerDisplayName(player) {
@@ -269,16 +325,33 @@ function AdminPicks() {
             onClick={() => setShowCurrentWeekOnly(!showCurrentWeekOnly)}
             className={`view-toggle-btn ${showCurrentWeekOnly ? 'active' : ''}`}
           >
-            {showCurrentWeekOnly ? '📅 Show All Weeks' : '🎯 Current Week Only'}
+            {showCurrentWeekOnly ? 'Show All Weeks' : 'Current Week Only'}
           </button>
           <button
             onClick={() => setEditPreviousWeeksEnabled(!editPreviousWeeksEnabled)}
             className={`edit-previous-btn ${editPreviousWeeksEnabled ? 'active' : ''}`}
           >
-            {editPreviousWeeksEnabled ? '🔓 Previous Weeks Unlocked' : '🔒 Edit Previous Weeks'}
+            {editPreviousWeeksEnabled ? 'Previous Weeks Unlocked' : 'Edit Previous Weeks'}
           </button>
         </div>
       </div>
+
+      {Object.keys(pendingChanges).length > 0 && (
+        <div className="pending-changes-banner">
+          <div className="pending-changes-content">
+            <span className="pending-icon">⚠️</span>
+            <strong>{Object.keys(pendingChanges).length} unsaved change{Object.keys(pendingChanges).length !== 1 ? 's' : ''}</strong>
+          </div>
+          <div className="pending-actions">
+            <button onClick={discardChanges} className="discard-btn" disabled={saving}>
+              Discard
+            </button>
+            <button onClick={saveAllChanges} className="save-all-btn" disabled={saving}>
+              {saving ? 'Saving...' : 'Save All Changes'}
+            </button>
+          </div>
+        </div>
+      )}
 
       {missingPicksPlayers.length > 0 && (
         <div className="missing-picks-alert">

@@ -155,6 +155,96 @@
   border-color: var(--primary-dark);
 }
 
+/* Pending Changes Banner */
+.pending-changes-banner {
+  background: #dbeafe;
+  border: 2px solid #3b82f6;
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.pending-changes-content {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.pending-icon {
+  font-size: 1.5rem;
+}
+
+.pending-changes-content strong {
+  color: #1e40af;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.pending-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.discard-btn,
+.save-all-btn {
+  padding: 0.625rem 1.25rem;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  box-shadow: var(--shadow-sm);
+}
+
+.discard-btn {
+  background: white;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+}
+
+.discard-btn:hover:not(:disabled) {
+  background: #f3f4f6;
+  color: #374151;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.save-all-btn {
+  background: #3b82f6;
+  color: white;
+}
+
+.save-all-btn:hover:not(:disabled) {
+  background: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.discard-btn:disabled,
+.save-all-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* Missing Picks Alert */
 .missing-picks-alert {
   background: #fef3c7;
@@ -473,6 +563,21 @@
   .edit-previous-btn {
     width: 100%;
     justify-content: center;
+  }
+
+  .pending-changes-banner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .pending-actions {
+    width: 100%;
+  }
+
+  .discard-btn,
+  .save-all-btn {
+    flex: 1;
   }
 
   .missing-picks-alert {
