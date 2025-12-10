@@ -40,11 +40,30 @@ function AdminPlayers() {
         .from('players')
         .select('*')
         .eq('season_year', currentYear)
-        .order('last_name', { ascending: true })
-        .order('first_name', { ascending: true })
 
       if (currentError) throw currentError
-      setCurrentPlayers(current || [])
+
+      // Sort with priority: Pending Buyback > Not Paid > Everyone else (alphabetically)
+      const sortedPlayers = (current || []).sort((a, b) => {
+        // Priority 1: Pending buyback players at top
+        const aPendingBuyback = a.buyback_status === 'pending'
+        const bPendingBuyback = b.buyback_status === 'pending'
+        if (aPendingBuyback && !bPendingBuyback) return -1
+        if (!aPendingBuyback && bPendingBuyback) return 1
+
+        // Priority 2: Not paid players
+        const aNotPaid = !a.has_paid
+        const bNotPaid = !b.has_paid
+        if (aNotPaid && !bNotPaid) return -1
+        if (!aNotPaid && bNotPaid) return 1
+
+        // Priority 3: Alphabetical by last name, then first name
+        const lastNameCompare = (a.last_name || '').localeCompare(b.last_name || '')
+        if (lastNameCompare !== 0) return lastNameCompare
+        return (a.first_name || '').localeCompare(b.first_name || '')
+      })
+
+      setCurrentPlayers(sortedPlayers)
 
       // Fetch previous season players (who aren't in current season)
       const { data: allPrevious, error: previousError } = await supabaseAdmin
