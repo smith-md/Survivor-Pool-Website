@@ -100,36 +100,68 @@ Deno.serve(async (req) => {
 
     let gamesUpdated = 0
     let gamesCreated = 0
+    const failedGames: Array<{ matchup: string; reason: string; espnId: string }> = []
+    const successfulGames: Array<{ matchup: string; status: string }> = []
 
     // Process each game
     for (const event of events) {
       const comp = event.competitions?.[0]
-      if (!comp || !comp.competitors) continue
+      if (!comp || !comp.competitors) {
+        failedGames.push({
+          matchup: `ESPN Event ${event.id}`,
+          reason: 'Missing competition or competitors data',
+          espnId: event.id
+        })
+        continue
+      }
 
       // Find home and away teams
       const homeTeam = comp.competitors.find(c => c.homeAway === 'home')
       const awayTeam = comp.competitors.find(c => c.homeAway === 'away')
-      
-      if (!homeTeam || !awayTeam) continue
+
+      if (!homeTeam || !awayTeam) {
+        failedGames.push({
+          matchup: `ESPN Event ${event.id}`,
+          reason: 'Missing home or away team data',
+          espnId: event.id
+        })
+        continue
+      }
 
       const homeAbbr = homeTeam.team.abbreviation
       const awayAbbr = awayTeam.team.abbreviation
+      const matchup = `${awayAbbr} @ ${homeAbbr}`
 
-      // Get team IDs from database
-      const { data: homeTeamData } = await supabaseClient
+      // Get team IDs from database with error handling
+      const { data: homeTeamData, error: homeTeamError } = await supabaseClient
         .from('nfl_teams')
         .select('id')
         .eq('team_abbreviation', homeAbbr)
         .single()
 
-      const { data: awayTeamData } = await supabaseClient
+      const { data: awayTeamData, error: awayTeamError } = await supabaseClient
         .from('nfl_teams')
         .select('id')
         .eq('team_abbreviation', awayAbbr)
         .single()
 
-      if (!homeTeamData || !awayTeamData) {
-        console.log(`Team not found: ${homeAbbr} or ${awayAbbr}`)
+      if (!homeTeamData || homeTeamError) {
+        console.error(`❌ Team lookup failed for ${homeAbbr}:`, homeTeamError?.message || 'Not found')
+        failedGames.push({
+          matchup,
+          reason: `Home team "${homeAbbr}" not found in database`,
+          espnId: event.id
+        })
+        continue
+      }
+
+      if (!awayTeamData || awayTeamError) {
+        console.error(`❌ Team lookup failed for ${awayAbbr}:`, awayTeamError?.message || 'Not found')
+        failedGames.push({
+          matchup,
+          reason: `Away team "${awayAbbr}" not found in database`,
+          espnId: event.id
+        })
         continue
       }
 
@@ -162,7 +194,12 @@ Deno.serve(async (req) => {
         })
 
       if (upsertError) {
-        console.error(`Error upserting game ${event.id}:`, upsertError)
+        console.error(`❌ Error upserting game ${matchup}:`, upsertError.message)
+        failedGames.push({
+          matchup,
+          reason: `Database upsert failed: ${upsertError.message}`,
+          espnId: event.id
+        })
         continue
       }
 
@@ -175,23 +212,37 @@ Deno.serve(async (req) => {
 
       if (checkGame && checkGame.created_at === checkGame.updated_at) {
         gamesCreated++
+        console.log(`✅ Created game: ${matchup} - ${gameStatus} (${awayScore}-${homeScore})`)
+        successfulGames.push({ matchup, status: 'created' })
       } else {
         gamesUpdated++
+        console.log(`✅ Updated game: ${matchup} - ${gameStatus} (${awayScore}-${homeScore})`)
+        successfulGames.push({ matchup, status: 'updated' })
       }
-
-      console.log(`Game ${homeAbbr} vs ${awayAbbr}: ${gameStatus} (${homeScore}-${awayScore})`)
     }
+
+    const totalProcessed = gamesCreated + gamesUpdated
+    const success = failedGames.length === 0
 
     return new Response(
       JSON.stringify({
-        success: true,
+        success,
         week: weekToCheck,
-        games_processed: events.length,
+        games_from_espn: events.length,
         games_created: gamesCreated,
         games_updated: gamesUpdated,
-        message: `Updated ${gamesUpdated} games, created ${gamesCreated} games for week ${weekToCheck}`
+        games_saved: totalProcessed,
+        games_failed: failedGames.length,
+        successful_games: successfulGames,
+        failed_games: failedGames,
+        message: failedGames.length === 0
+          ? `Successfully processed all ${totalProcessed} games for week ${weekToCheck}`
+          : `Processed ${totalProcessed} games, ${failedGames.length} failed for week ${weekToCheck}`
       }),
-      { status: 200, headers: { 'Content-Type': 'application/json' } }
+      {
+        status: failedGames.length === 0 ? 200 : 207, // 207 = Multi-Status (partial success)
+        headers: { 'Content-Type': 'application/json' }
+      }
     )
 
   } catch (error) {
