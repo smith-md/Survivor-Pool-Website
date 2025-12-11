@@ -35,10 +35,6 @@ function AdminDashboard() {
           <p>Submit weekly picks for all players.</p>
         </Link>
       </div>
-
-      <div className="admin-note">
-        <p>⚠️ Admin functions coming soon. These pages will allow you to manage all aspects of your survivor pool.</p>
-      </div>
     </div>
   )
 }

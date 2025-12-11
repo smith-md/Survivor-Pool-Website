@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { supabase } from '../lib/supabase'
 import './Home.css'
 
@@ -13,6 +13,7 @@ function Home() {
     activePlayers: 0,
     totalPot: 0
   })
+  const tableWrapperRef = useRef(null)
 
   useEffect(() => {
     fetchData()
@@ -110,6 +111,38 @@ function Home() {
     }
   }
 
+  // Auto-scroll to current week
+  useEffect(() => {
+    if (!loading && weeks.length > 0 && tableWrapperRef.current) {
+      // Find current week based on today's date
+      const today = new Date()
+      const currentWeekIndex = weeks.findIndex(week => {
+        const startDate = new Date(week.start_date)
+        const endDate = new Date(week.end_date)
+        return today >= startDate && today <= endDate
+      })
+
+      // If current week found, scroll to it; otherwise scroll to last week
+      const weekToShow = currentWeekIndex >= 0 ? currentWeekIndex : weeks.length - 1
+
+      if (weekToShow >= 0) {
+        // Wait for DOM to update, then scroll
+        setTimeout(() => {
+          const weekColumns = tableWrapperRef.current?.querySelectorAll('.week-col')
+          if (weekColumns && weekColumns[weekToShow]) {
+            const targetColumn = weekColumns[weekToShow]
+            const scrollPosition = targetColumn.offsetLeft - 200 // Offset to show player names too
+
+            tableWrapperRef.current.scrollTo({
+              left: Math.max(0, scrollPosition),
+              behavior: 'smooth'
+            })
+          }
+        }, 100)
+      }
+    }
+  }, [loading, weeks])
+
   function getPlayerDisplayName(player) {
     if (player.first_name) {
       return player.last_name
@@ -150,7 +183,7 @@ function Home() {
 
       <div className="picks-grid-container">
         <h2>Player Picks</h2>
-        <div className="table-wrapper">
+        <div className="table-wrapper" ref={tableWrapperRef}>
           <table className="picks-table">
             <thead>
               <tr>
