@@ -79,14 +79,20 @@ jobs:
             .invoke(functionName, { body: params })
             .then(({ data, error }) => {
               if (error) {
-                console.error('ERROR:', error.message);
+                console.error('ERROR from Edge Function:');
+                console.error('  Message:', error.message);
+                console.error('  Full error:', JSON.stringify(error, null, 2));
                 process.exit(1);
               }
               console.log('✓ Update successful');
               console.log('Response:', JSON.stringify(data, null, 2));
+              process.exit(0);
             })
             .catch(err => {
-              console.error('ERROR:', err.message);
+              console.error('ERROR invoking function:');
+              console.error('  Message:', err.message);
+              console.error('  Stack:', err.stack);
+              console.error('  Full error:', JSON.stringify(err, null, 2));
               process.exit(1);
             });
           "
