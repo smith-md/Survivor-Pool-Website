@@ -28,17 +28,76 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Validate secrets
+        run: |
+          if [ -z "${{ secrets.SUPABASE_URL }}" ]; then
+            echo "ERROR: SUPABASE_URL secret is not set"
+            echo "Go to Settings → Secrets and variables → Actions"
+            echo "Add secret named: SUPABASE_URL (no VITE_ prefix)"
+            exit 1
+          fi
+
+          if [ -z "${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" ]; then
+            echo "ERROR: SUPABASE_SERVICE_ROLE_KEY secret is not set"
+            echo "Go to Settings → Secrets and variables → Actions"
+            echo "Add secret named: SUPABASE_SERVICE_ROLE_KEY (no VITE_ prefix)"
+            exit 1
+          fi
+
+          echo "✓ All secrets are configured"
+
       - name: Update NFL Game Results
         run: |
+          set -e  # Exit on any error
+
+          # Build URL with optional week parameter
           WEEK_PARAM=""
           if [ -n "${{ github.event.inputs.week }}" ]; then
             WEEK_PARAM="?week=${{ github.event.inputs.week }}"
+            echo "Using specified week: ${{ github.event.inputs.week }}"
+          else
+            echo "Auto-detecting current week"
           fi
 
-          curl -X POST \
-            "${{ secrets.SUPABASE_URL }}/functions/v1/update-nfl-results${WEEK_PARAM}" \
+          URL="${{ secrets.SUPABASE_URL }}/functions/v1/update-nfl-results${WEEK_PARAM}"
+          echo "Calling Edge Function: $URL"
+
+          # Make request and capture status code and response
+          HTTP_STATUS=$(curl -w "%{http_code}" -o response.json -s -X POST \
+            "$URL" \
             -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
-            -H "Content-Type: application/json"
+            -H "Content-Type: application/json")
+
+          echo "HTTP Status: $HTTP_STATUS"
+          echo "Response:"
+          cat response.json
+          echo ""
+
+          # Check if request was successful
+          if [ "$HTTP_STATUS" -eq 200 ] || [ "$HTTP_STATUS" -eq 207 ]; then
+            echo "✓ Update successful"
+            exit 0
+          elif [ "$HTTP_STATUS" -eq 401 ]; then
+            echo "ERROR: Authentication failed (HTTP 401)"
+            echo "Check that SUPABASE_SERVICE_ROLE_KEY secret is correct"
+            echo "Get it from: Supabase Dashboard → Settings → API → service_role key"
+            cat response.json
+            exit 1
+          elif [ "$HTTP_STATUS" -eq 404 ]; then
+            echo "ERROR: Week not found (HTTP 404)"
+            echo "The specified week may not exist in the database"
+            cat response.json
+            exit 1
+          elif [ "$HTTP_STATUS" -eq 500 ]; then
+            echo "ERROR: Edge Function error (HTTP 500)"
+            echo "Check Supabase function logs: supabase functions logs update-nfl-results"
+            cat response.json
+            exit 1
+          else
+            echo "ERROR: Unexpected HTTP status: $HTTP_STATUS"
+            cat response.json
+            exit 1
+          fi
 
       - name: Log completion
         run: echo "NFL results update completed"
