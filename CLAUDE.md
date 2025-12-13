@@ -17,18 +17,31 @@ npm run lint         # Run ESLint
 ```
 
 ### Database Utility Scripts
-All scripts use Node.js CommonJS format (`.cjs`) and require `.env` file with Supabase credentials:
+All scripts are organized in the `scripts/` directory and use Node.js CommonJS format (`.cjs`). They require a `.env` file with Supabase credentials.
 
+**Main utility scripts:**
 ```bash
-node update-pick-results.cjs          # Manually sync pick results from nfl_games table
-node check-picks.cjs                  # Validate picks data integrity
-node check-game-results.cjs           # Verify game results from ESPN
-node check-losses.cjs                 # Audit player losses/strikes
-node diagnose-missing-picks.cjs       # Find missing picks for a week
-node import-historical-games.cjs      # Backfill historical game data
-node fix-washington-team.cjs          # Fix Washington team name issues
-node fix-washington-picks.cjs         # Fix picks referencing old Washington names
+node scripts/update-pick-results.cjs          # Manually sync pick results from nfl_games table
+node scripts/import-historical-games.cjs      # Backfill historical game data
 ```
+
+**Diagnostic scripts** (`scripts/check/`):
+```bash
+node scripts/check/check-picks.cjs            # Validate picks data integrity
+node scripts/check/check-game-results.cjs     # Verify game results from ESPN
+node scripts/check/check-losses.cjs           # Audit player losses/strikes
+node scripts/check/diagnose-missing-picks.cjs # Find missing picks for a week
+```
+
+**One-time fix scripts** (`scripts/fix/`):
+```bash
+node scripts/fix/fix-washington-team.cjs      # Fix Washington team name issues
+node scripts/fix/fix-washington-picks.cjs     # Fix picks referencing old Washington names
+```
+
+**Additional folders:**
+- `scripts/setup/` - Season setup and test scripts
+- `scripts/import/` - Data import utilities
 
 ### Supabase Edge Functions
 ```bash
@@ -123,7 +136,7 @@ Weeks are pre-populated for 2025 season. For future seasons, follow pattern in `
 2. Verify week exists: `SELECT * FROM weeks WHERE week_number = N;`
 3. Check cron jobs are scheduled: `SELECT * FROM cron.job;`
 4. Manual trigger: `curl.exe -X POST https://your-project.supabase.co/functions/v1/update-nfl-results`
-5. If needed, run `node update-pick-results.cjs` to sync
+5. If needed, run `node scripts/update-pick-results.cjs` to sync
 
 ### Team Abbreviations
 Database uses ESPN's official team abbreviations (e.g., "WSH" for Washington Commanders). All team abbreviations match ESPN API exactly - no mapping needed.
