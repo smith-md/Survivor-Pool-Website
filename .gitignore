@@ -37,3 +37,4 @@ lerna-debug.log*
 
 # Supabase
 .temp/
+GITHUB_ACTIONS_SETUP.md
