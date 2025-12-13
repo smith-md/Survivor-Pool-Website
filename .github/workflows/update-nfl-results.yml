@@ -28,76 +28,69 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install @supabase/supabase-js
+
       - name: Validate secrets
         run: |
           if [ -z "${{ secrets.SUPABASE_URL }}" ]; then
             echo "ERROR: SUPABASE_URL secret is not set"
-            echo "Go to Settings → Secrets and variables → Actions"
-            echo "Add secret named: SUPABASE_URL (no VITE_ prefix)"
             exit 1
           fi
 
           if [ -z "${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" ]; then
             echo "ERROR: SUPABASE_SERVICE_ROLE_KEY secret is not set"
-            echo "Go to Settings → Secrets and variables → Actions"
-            echo "Add secret named: SUPABASE_SERVICE_ROLE_KEY (no VITE_ prefix)"
             exit 1
           fi
 
           echo "✓ All secrets are configured"
 
       - name: Update NFL Game Results
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          WEEK: ${{ github.event.inputs.week }}
         run: |
-          set -e  # Exit on any error
+          node -e "
+          const { createClient } = require('@supabase/supabase-js');
 
-          # Build URL with optional week parameter
-          WEEK_PARAM=""
-          if [ -n "${{ github.event.inputs.week }}" ]; then
-            WEEK_PARAM="?week=${{ github.event.inputs.week }}"
-            echo "Using specified week: ${{ github.event.inputs.week }}"
-          else
-            echo "Auto-detecting current week"
-          fi
+          const supabase = createClient(
+            process.env.SUPABASE_URL,
+            process.env.SUPABASE_SERVICE_ROLE_KEY
+          );
 
-          URL="${{ secrets.SUPABASE_URL }}/functions/v1/update-nfl-results${WEEK_PARAM}"
-          echo "Calling Edge Function: $URL"
+          const week = process.env.WEEK || '';
+          const functionName = 'update-nfl-results';
+          const params = week ? { week: week } : {};
 
-          # Make request and capture status code and response
-          HTTP_STATUS=$(curl -w "%{http_code}" -o response.json -s -X POST \
-            "$URL" \
-            -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
-            -H "Content-Type: application/json")
+          console.log('Calling Edge Function:', functionName);
+          if (week) console.log('Using specified week:', week);
+          else console.log('Auto-detecting current week');
 
-          echo "HTTP Status: $HTTP_STATUS"
-          echo "Response:"
-          cat response.json
-          echo ""
+          supabase.functions
+            .invoke(functionName, { body: params })
+            .then(({ data, error }) => {
+              if (error) {
+                console.error('ERROR:', error.message);
+                process.exit(1);
+              }
+              console.log('✓ Update successful');
+              console.log('Response:', JSON.stringify(data, null, 2));
+            })
+            .catch(err => {
+              console.error('ERROR:', err.message);
+              process.exit(1);
+            });
+          "
 
-          # Check if request was successful
-          if [ "$HTTP_STATUS" -eq 200 ] || [ "$HTTP_STATUS" -eq 207 ]; then
-            echo "✓ Update successful"
-            exit 0
-          elif [ "$HTTP_STATUS" -eq 401 ]; then
-            echo "ERROR: Authentication failed (HTTP 401)"
-            echo "Check that SUPABASE_SERVICE_ROLE_KEY secret is correct"
-            echo "Get it from: Supabase Dashboard → Settings → API → service_role key"
-            cat response.json
-            exit 1
-          elif [ "$HTTP_STATUS" -eq 404 ]; then
-            echo "ERROR: Week not found (HTTP 404)"
-            echo "The specified week may not exist in the database"
-            cat response.json
-            exit 1
-          elif [ "$HTTP_STATUS" -eq 500 ]; then
-            echo "ERROR: Edge Function error (HTTP 500)"
-            echo "Check Supabase function logs: supabase functions logs update-nfl-results"
-            cat response.json
-            exit 1
-          else
-            echo "ERROR: Unexpected HTTP status: $HTTP_STATUS"
-            cat response.json
-            exit 1
-          fi
 
       - name: Log completion
         run: echo "NFL results update completed"
